@@ -1,0 +1,25 @@
+body {
+    background-color: cadetblue;
+    
+    
+}
+
+.banner {
+    height: 80px;
+    color: white;
+    background-image: url('../Fotos/wonder_\ the\ world\ tour.jpeg');
+    background-size: cover;
+    
+  }
+
+
+
+
+.container {
+    display: flex;
+    
+    margin: auto;
+    
+}
+
+
