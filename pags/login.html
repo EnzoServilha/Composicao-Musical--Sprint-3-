@@ -3,32 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <link rel="stylesheet" href="../Css/navbar.css">
+    <link rel="stylesheet" href="../Css/cadastro_login.css">
 </head>
 <body>
     <nav class="navbar">
-
         <div class="logo">Composição</div>
-
         <ul class="nav-links">
-
             <li> <a href="home.html">Home</a> </li>
-
             <li> <a href="beneficos.html">Beneficios</a> </li>
-
             <li> <a href="contribuicao.html">Contribuição</a> </li>
-
             <li> <a href="videos.html">Videos</a> </li>
-
         </ul>
-
         <div class="auth-links">
             <a href="login.html" class="button-login">Login</a>
-
             <a href="cadastro.html" class="button-cadastro">Cadastro</a>
         </div>
-
     </nav>
+
+    
+    <div class="pai"> 
+        <div class="principal">
+            <section class="formulario">
+                <h1>Login</h1>
+
+                <div class="campo">
+                    <span>E-mail:</span>
+                    <input id="ipt_email" type="text" placeholder="enzo.servilha@sptech.school" />
+                </div>
+
+                <div class="campo">
+                    <span>Senha:</span>
+                    <input id="ipt_senha" type="password" placeholder="*******" />
+                </div>
+
+                     <button onclick="verificarLogin()" class="botao_cadastro_login">Acessar</button>
+                <div id="div_resposta" style="margin-top:1em; color:#c00;"></div>
+            </section> 
+        </div>
+    </div>
+    
 </body>
+<script>
+
+    
+  let qtd_tentativa = 6;
+
+  function verificarLogin() {
+    var email = ipt_email.value
+    var senha = ipt_senha.value
+    const usuariosSistema = ['anna@gmail.com', 'bianca@gmail.com', 'enzo@gmail.com', 'igor@gmail.com', 'manuela@gmail.com', 'sergio@gmail.com']
+    const senhaCorreta = 'sprint2'
+    var resposta = ''
+
+    
+     if (email === '') {
+      resposta = 'Por favor, insira o Email'
+    } else if (senha === '') {
+      resposta = 'Por favor, insira a senha'
+    } else if (qtd_tentativa <= 0) {
+      resposta = 'Número de tentativas esgotado.<br>Tente novamente mais tarde.'
+    } else {
+
+        if (usuariosSistema.includes(email) && senha === senhaCorreta) {
+          resposta = '<span style="color: green;">Login válido!</span>'
+          qtd_tentativa = 0; // se o login for valido, isso vai bloquear fazer outro
+          window.location.href = "dashboard.html";
+
+        } else {
+          qtd_tentativa--
+          resposta = 'Login inválido!<br>Tente novamente.<br><br>Tentativas restantes: ' + qtd_tentativa
+        }
+      
+    }
+
+    document.getElementById('div_resposta').innerHTML = resposta
+  }
+
+</script>
 </html>
