@@ -3,36 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cadastro</title>
     <link rel="stylesheet" href="../Css/navbar.css">
+    <link rel="stylesheet" href="../Css/cadastro.css">
 </head>
+
 <body>
-        <nav class="navbar">
-
+    <nav class="navbar">
         <div class="logo">Composição</div>
-
         <ul class="nav-links">
-
             <li> <a href="home.html">Home</a> </li>
-
             <li> <a href="beneficos.html">Beneficios</a> </li>
-
             <li> <a href="contribuicao.html">Contribuição</a> </li>
-
             <li> <a href="videos.html">Videos</a> </li>
-
         </ul>
-
         <div class="auth-links">
             <a href="login.html" class="button-login">Login</a>
-
             <a href="cadastro.html" class="button-cadastro">Cadastro</a>
         </div>
-
     </nav>
 
+    <div class="pai"> 
+        <div class="principal">
+            
+             
+            
 
+            
+            <section class="formulario">
+                <h1>Cadastre-se</h1>
 
+                <div class="campo">
+                    <span>Nome de Usuário:</span>
+                    <input id="ipt_usuario" type="text" placeholder="Enzo" />
+                </div>
+
+                <div class="campo">
+                    <span>E-mail:</span>
+                    <input id="ipt_email" type="text" placeholder="enzo.servilha@sptech.school" />
+                </div>
+
+                <div class="campo">
+                    <span>Senha:</span>
+                    <input id="ipt_senha" type="password" placeholder="*******" />
+                </div>
+
+                <div class="campo">
+                    <span>Confirmação da Senha:</span>
+                    <input id="ipt_confirmacaoSenha" type="password" placeholder="*******" />
+                    <a href="login.html">Já tem cadastro? Entrar</a>
+                     <button onclick="verificarCadastro()" class="botao_cadastro_login">Registrar-se</button>
+                <div id="div_resposta" style="margin-top:1em; color:#c00;"></div>
+            </section> 
+        </div>
+
+    </div>
 
 </body>
 </html>
