@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,114 +24,150 @@
         </div>
     </nav>
 
-    <div class="pai"> 
+    <div class="pai">
         <div class="principal">
             <section class="formulario">
                 <h1>Cadastre-se</h1>
 
                 <div class="campo">
                     <span>Nome de Usuário:</span>
-                    <input id="ipt_usuario" type="text" placeholder="Enzo" />
+                    <input id="nome_input" type="text" placeholder="Enzo" />
                 </div>
 
                 <div class="campo">
                     <span>E-mail:</span>
-                    <input id="ipt_email" type="text" placeholder="enzo.servilha@sptech.school" />
+                    <input id="email_input" type="text" placeholder="enzo.servilha@sptech.school" />
                 </div>
 
                 <div class="campo">
                     <span>Senha:</span>
-                    <input id="ipt_senha" type="password" placeholder="*******" />
+                    <input id="senha_input" type="password" placeholder="*******" />
                 </div>
 
                 <div class="campo">
                     <span>Confirmação da Senha:</span>
-                    <input id="ipt_confirmacaoSenha" type="password" placeholder="*******" />
+                    <input id="confirmacao_senha_input" type="password" placeholder="*******" />
                 </div>
 
                 <div class="acao">
                     <a href="login.html">Já tem cadastro? Entrar</a>
-                     <button onclick="verificacaoCadastro()" class="botao_cadastro_login">Registrar-se</button>
+                    <button onclick="cadastrar()" class="botao_cadastro_login">Registrar-se</button>
                 </div>
 
                 <div id="div_resposta" style="margin-top:1em; color:#c00;"></div>
-            </section> 
+                <div class="card_erro" id="cardErro">
+                    <span id="mensagem_erro"></span>
+                </div>
+            </section>
         </div>
     </div>
 
 </body>
 <script>
-    
-    let qtd_tentativa = 20
-    
-        function verificacaoCadastro(){
-          var nomeUsuario = ipt_usuario.value
-          var email = ipt_email.value
-          var senha = ipt_senha.value
-          var confirmarSenha = ipt_confirmacaoSenha.value 
-          const regraEmail = ['@','.', '#', '$', '%', '&', '*', '(', ')']
-          const CaracterEspeciais = ['!', '@', '#', '$', '%', '&', '*', '(', ')']
-          var resposta = ''
-       
-         if(nomeUsuario === '')
-          {
-            resposta = 'Por favor, insira um nome.'
-          } 
-          else if (email === '') 
-          {
-            resposta = 'Por favor, insira algum Email.'
-          }
-          else if (senha === '') 
-          {
-            resposta = 'Por favor, insira alguma senha'
-          } 
-          else if(confirmarSenha === '')
-          {
-            resposta = 'Por Favor, confirme a sua senha.'
-          } 
-          else if (qtd_tentativa <= 0) 
-          {
-            resposta = 'As suas tentativas acabaram. <br> Tente novamente mais tarde.'
-          } 
-     else {
-          for (var i = 0; i < 1; i++) 
-            {
-              if(nomeUsuario.length > 20)
-              {
-                qtd_tentativa--
-                resposta = 'Nome de usuário grande demais.<br><br>O nome deve conter no máximo 20 caracteres.'
-    
-              } 
-              else if(!email.includes('@') && !email.includes('.'))
-              {
-                qtd_tentativa--
-                resposta = 'Email Inválido.'
-    
-              } 
-              else if(senha.length < 8 || senha.length > 120 || !CaracterEspeciais.some(char => senha.includes(char)))
-              {
-                qtd_tentativa--
-                resposta = 'Senha inválida.<br><br>Deve ficar entre 8 e 120 caracteres e conter ao menos um especial.'
-    
-              }
-              else if(confirmarSenha != senha)
-              {
-                resposta = 'A confirmação da sua senha não está igual a sua senha'
-    
-              } 
-              else 
-              {
-                resposta = `<span style="color: green;">Parabéns ${nomeUsuario}, Cadastro válido!</span>`
-                qtd_tentativa = 0; // se o login for valido, isso vai bloquear fazer outro
-                window.location.href = "login.html"; // redireciona para a página inicial
-              }
-            }
-          }
-      
-          document.getElementById('div_resposta').innerHTML = resposta
+
+    // Array para armazenar empresas cadastradas para validação de código de ativação 
+    let listaEmpresasCadastradas = [];
+
+    function cadastrar() {
+        // aguardar();
+
+        //Recupere o valor da nova input pelo nome do id
+        // Agora vá para o método fetch logo abaixo
+        var nomeVar = nome_input.value;
+        var emailVar = email_input.value;
+        var senhaVar = senha_input.value;
+        var confirmacaoSenhaVar = confirmacao_senha_input.value;
+
+
+        var idEmpresaVincular = 1
+
+
+        // Verificando se há algum campo em branco
+        if (
+            nomeVar == "" ||
+            emailVar == "" ||
+            senhaVar == "" ||
+            confirmacaoSenhaVar == ""
+
+        ) {
+            cardErro.style.display = "block";
+            mensagem_erro.innerHTML =
+                "(Mensagem de erro para todos os campos em branco)";
+
+            //finalizarAguardar();
+            return false;
+        } else {
+            setTimeout(sumirMensagem, 5000);
         }
-    
+
+
+        // Enviando o valor da nova input
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                // crie um atributo que recebe o valor recuperado aqui
+                // Agora vá para o arquivo routes/usuario.js
+                nomeServer: nomeVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar,
+                idEmpresaVincularServer: idEmpresaVincular
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    cardErro.style.display = "block";
+
+                    mensagem_erro.innerHTML =
+                        "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+
+                    setTimeout(() => {
+                        window.location = "login.html";
+                    }, "2000");
+
+                    limparFormulario();
+                    finalizarAguardar();
+                } else {
+                    throw "Houve um erro ao tentar realizar o cadastro!";
+                }
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+                // finalizarAguardar();
+            });
+
+        return false;
+    }
+
+    // Listando empresas cadastradas 
+    function listar() {
+        fetch("/empresas/listar", {
+            method: "GET",
+        })
+            .then(function (resposta) {
+                resposta.json().then((empresas) => {
+                    empresas.forEach((empresa) => {
+                        listaEmpresasCadastradas.push(empresa);
+
+                        console.log("listaEmpresasCadastradas")
+                        console.log(listaEmpresasCadastradas[0].codigo_ativacao)
+                    });
+                });
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+    }
+
+    function sumirMensagem() {
+        cardErro.style.display = "none";
+    }
 
 
 </script>
+
 </html>
