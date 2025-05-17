@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo - Quiz</title>
+    <link rel="stylesheet" href="../Css/quiz.css">
+</head>
+<body>
+    <div id="pontuacaoEJogo">
+        <button id="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
+
+        <div id="pontuacao" class="flex-colunar width-fit-content border-primary">
+            <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
+                <span class="width-fit-content">Quantidade de acertos: <span id="spanCertas"></span></span>
+                <span class="width-fit-content">Quantidade de erros: <span id="spanErradas"></span></span>
+            </div>
+            <div id="pontuacaoFinalJogo" class="flex-colunar padding-8">
+                <span id="pontuacaoFinal" class="width-fit-content">Pontuação Final:
+                    <span id="spanPontuacaoFinal">***</span>
+                </span>
+                <span id="msgFinal" class="width-fit-content">***</span>
+            </div>
+        </div>
+
+        <div id="jogo" class="width-fit-content flex-colunar border-secondary">
+
+            <div id="infoQuestao" class="padding-8">
+                <span>Questão atual: <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
+                    questões.</span>
+            </div>
+
+            <div id="perguntaDaQuestaoAtual" class="padding-8">
+                <span id="spanQuestaoExibida" class="text-bold"></span>
+            </div>
+
+            <div id="infoAlternativas" class="padding-8">
+                <span><em>Escolha uma opção dentre as abaixo:</em></span>
+            </div>
+
+            <div id="opcoes" class="flex-colunar padding-8">
+
+                <label class="botaoOpcao">
+                    <input type="radio"  name="option" value="alternativaA" onclick="respostaSelecionada()"/>
+                    <span id="labelOpcaoUm" class="option"></span>
+                </label>
+
+                <label class="botaoOpcao">
+                    <input type="radio"  name="option" value="alternativaB" onclick="respostaSelecionada()"/>
+                    <span id="labelOpcaoDois" class="option"></span>
+                </label>
+
+                <label class="botaoOpcao">
+                    <input type="radio" name="option" value="alternativaC" onclick="respostaSelecionada()" />
+                    <span id="labelOpcaoTres" class="option"></span>
+                </label>
+
+                <label class="botaoOpcao">
+                    <input type="radio" name="option" value="alternativaD" onclick="respostaSelecionada()" />
+                    <span id="labelOpcaoQuatro" class="option"></span>
+                </label>
+
+            </div>
+
+            <div id="botoes" class="flex-colunar padding-8">
+                <button onclick="avancar()" id="btnProx" disabled>Avançar para próxima questão</button>
+                <button onclick="tentarNovamente()" id="btnTentarNovamente" disabled>Tentar novamente</button>
+            </div>
+
+        </div>
+    </div>
+    
+</body>
+<script>
+    
+    const listaDeQuestoes = [
+
+        {
+            pergunta: "Qual mês tem 30 dias?",
+            alternativaA: "Janeiro",
+            alternativaB: "Dezembro",
+            alternativaC: "Junho",
+            alternativaD: "Agosto",
+            alternativaCorreta: "alternativaC"
+        },
+
+        {
+            pergunta: "Quantas horas tem em um dia?",
+            alternativaA: "30 horas",
+            alternativaB: "38 horas",
+            alternativaC: "48 horas",
+            alternativaD: "24 horas",
+            alternativaCorreta: "alternativaD"
+        },
+
+        {
+            pergunta: "Qual destes números é ímpar?",
+            alternativaA: "Dez",
+            alternativaB: "Doze",
+            alternativaC: "Oito",
+            alternativaD: "Onze",
+            alternativaCorreta: "alternativaD"
+        }
+
+    ]
+
+        let btnProx;
+        let btnTentarNovamente;
+        let btnIniciarQuiz;
+        let jogoContainer;
+        let spanNumeroAtual; 
+        let spanQtdQuestoes;
+        let spanqQuestao;
+
+        let primeiraOpcao;
+        let segundaOpcao;
+        let terceiraOpcao;
+        let quartaOpcao;
+
+        let numeroDaQuestaoAtual = 0
+        let quantidadeDeQuestoes = listaDeQuestoes.length
+        let pontuacaoFinal = 0
+        let certas = 0 
+        let erradas = 0 
+
+
+    window.onload = () => {
+
+         btnProx = document.getElementById("btnProx");
+         btnTentarNovamente = document.getElementById("btnTentarNovamente");
+         btnIniciarQuiz = document.getElementById("btnIniciarQuiz");
+         jogoContainer = document.getElementById("jogo");
+         spanNumeroAtual = document.getElementById("spanNumeroDaQuestaoAtual");
+         spanQtdQuestoes = document.getElementById("qtdQuestoes");
+         spanqQuestao = document.getElementById("spanQuestaoExibida");
+
+
+            primeiraOpcao = document.getElementById("primeiraOpcao");
+             segundaOpcao = document.getElementById("segundaOpcao");
+            terceiraOpcao = document.getElementById("terceiraOpcao");
+             quartaOpcao = document.getElementById("quartaOpcao");
+
+       
+        inicializar()
+    }
+        
+   function inicializar(){
+    spanQtdQuestoes.innerText = quantidadeDeQuestoes
+    document.getElementById('pontuacao').style.display = "none"
+    document.getElementById('jogo').style.display = "none"
+
+    //Inativação Botões
+    btnProx.disabled = true;
+    btnTentarNovamente.disabled = true
+
+    //Reinicia Variaveis Globais se quiser
+    numeroDaQuestaoAtual = 0
+    pontuacaoFinal = 0
+    certas = 0
+    erradas = 0
+
+    //Limpa o input na hora do clique e a cor 
+    desmarcarRadioButtons()
+    limparCoresBackgroundOpcoes()
+   }
+
+    function iniciarQuiz() {
+        document.getElementById('pontuacao').style.display = "flex"
+        document.getElementById('jogo').style.display = "flex"
+        document.getElementById('btnIniciarQuiz').style.display = "none"
+
+        preencherHTMLcomQuestaoAtual(0)
+
+        
+        btnProx.disabled = true
+        btnTentarNovamente.disabled = true
+
+        
+    }
+
+    function preencherHTMLcomQuestaoAtual(index) {
+        habilitarAlternativas(true)
+        const questaoAtual = listaDeQuestoes[index]
+        numeroDaQuestaoAtual = index
+       
+
+        document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1 // ajustando porque o index começa em 0
+        document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.pergunta;
+        document.getElementById("labelOpcaoUm").innerHTML = questaoAtual.alternativaA;
+        document.getElementById("labelOpcaoDois").innerHTML = questaoAtual.alternativaB;
+        document.getElementById("labelOpcaoTres").innerHTML = questaoAtual.alternativaC;
+        document.getElementById("labelOpcaoQuatro").innerHTML = questaoAtual.alternativaD;
+    }
+
+    function respostaSelecionada() {
+        if(!btnProx.disabled){  
+            return
+        }
+
+        checarResposta()    //mostra certo e errado exatamente 
+        habilitarAlternativas(false)
+        btnProx.disabled = false
+
+    }
+
+    function habilitarAlternativas(trueOrFalse) {
+        let opcaoEscolhida = trueOrFalse ? false : true
+
+        primeiraOpcao.disabled = opcaoEscolhida
+        segundaOpcao.disabled = opcaoEscolhida
+        terceiraOpcao.disabled = opcaoEscolhida
+        quartaOpcao.disabled = opcaoEscolhida
+
+    }
+
+    function avancar() {
+        if(btnProx.disabled){
+            alert("Você precisa selecionar uma resposta antes de clicar em avançar")
+        }
+        btnProx.disabled = true
+        
+
+        desmarcarRadioButtons()
+        limparCoresBackgroundOpcoes()
+
+        if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
+            numeroDaQuestaoAtual++
+            preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
+        } else{
+            finalizarJogo()
+        }
+    }
+
+    function tentarNovamente() {
+        window.location.reload()
+    }
+
+    function checarResposta() {
+        const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual] 
+        const respostaQuestaoAtual = questaoAtual.alternativaCorreta 
+
+        const options = document.getElementsByName("option"); 
+
+        let alternativaCorreta = null 
+
+        options.forEach((option) => {
+            if (option.value === respostaQuestaoAtual) {
+                alternativaCorreta = option.labels[0].id
+            }
+        })
+
+        options.forEach((option) => {
+            const label = document.getElementById(option.labels[0].id)
+            label.classList.remove("text-sucess-with-bg", "text-error-with-bg")
+
+            if (option.checked  && option.value === respostaQuestaoAtual) {
+                label.classList.add("text-sucess-with-bg")
+                pontuacaoFinal++
+                certas++               
+            } else if (option.checked && option.value !== respostaQuestaoAtual) {
+                document.getElementById(alternativaCorreta).classList.add("text-sucess-with-bg")
+                erradas++
+            }
+        })
+        document.getElementById('spanCertas').innerText = certas
+        document.getElementById('spanErradas').innerText = erradas
+    }
+
+    function limparCoresBackgroundOpcoes() {
+        const labels = [
+            document.getElementById("labelOpcaoUm"),
+            document.getElementById("labelOpcaoDois"),
+            document.getElementById("labelOpcaoTres"),
+            document.getElementById("labelOpcaoQuatro")
+
+        ]
+        
+            labels.forEach((label) => {
+                label.classList.remove("text-sucess-with-bg", "text-error-with-bg")
+            } 
+        )
+    }
+
+    function desmarcarRadioButtons() {
+        const options = document.getElementsByName("option");
+        for (let i = 0; i < options.length; i++) {
+            options[i].checked = false;
+        }
+    }
+
+    function finalizarJogo() {
+        alert("Você finalizou o quiz")
+        
+        document.getElementById('pontuacaoFinal').style.display = "block"
+        document.getElementById('spanPontuacaoFinal').innerText = pontuacaoFinal + ' acertos'
+        
+        //Desativa botões dps de terminar 
+
+        
+        btnProx.disabled = true
+        btnTentarNovamente.disabled = false
+
+        //Esconder se quiser
+        document.getElementById('jogo').style.display = "none"
+
+    }
+
+    
+
+
+</script>
+</html>

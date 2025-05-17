@@ -1,0 +1,126 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #111;
+    color: #eee;
+}
+
+.banner-home{
+    position: relative;
+    height: 90vh;
+    color: white;
+    background-image: url('../Fotos/logan-weaver-lgnwvr-OxlzI0sVWVo-unsplash\ \(1\).jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    
+  }
+
+  .banner-home::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 0;
+  }
+
+  .banner-home p{
+    font-size: 1.25rem;
+    line-height: 1.6;
+    max-width: 800px;
+  }
+
+  .banner-home span{
+    color: #00bcd4;
+    font-weight: 'mont-serrat', sans-serif;
+}
+
+
+/*section*/
+.container {
+    display: flex;
+    width: 100%;
+    margin: auto;
+    justify-content: center;
+}
+
+.home2{
+  background-color:rgb(0, 0, 0);
+  position: relative;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center
+}
+.secundaria{
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+
+.intro-home h2, .intro-home h3{
+color: #ccc;
+}
+
+.intro-home p{
+margin: 15px 0;
+line-height: 1.6;
+color: #bbb;
+}
+.intro-home ul{
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+.intro-home ul li{
+  margin: 10 0;
+  color: #aaf;
+  font-weight: 500;
+}
+.cards-containers{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 50px;
+  gap: 20px;
+}
+.card{
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 20px;
+  flex: 1;
+  min-width: 260px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card img{
+  width: 60px;
+  height: 60px;
+  margin-bottom: 15px;
+}
+.card h4{
+  color: #87cefa;
+  margin-bottom: 10px;
+}
+.card p{
+  color: #ccc;
+  font-size: 14px;
+}
+.card:hover{
+  transform: translateY(-20px);
+  box-shadow: 0 8px 16px rgba(0,0,255,0.2);
+}
+.footer{
+  background-color: #0a0a0a ;
+  text-align: center;
+  padding: 20px 0;
+  color: #666;
+  font-size: 14px;
+  margin-top: 60px;
+
+}

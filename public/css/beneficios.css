@@ -1,0 +1,84 @@
+body{
+  margin: 0;
+  color: #111;
+  
+}
+
+.banner {
+ position: relative;
+    height: 90vh;
+    color: white;
+    background-image: url('../Fotos/festival-show-show-tema-borrao-de-fundo.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+}
+
+.container{
+max-width: 1000px;
+margin: 0 auto ;
+padding: 0 20px;
+
+}
+.intro-beneficios{
+  margin-top: 40px;
+  line-height: 1.6;
+  background-color: #111;
+  padding: 40px 20px;
+  margin-top: 0;
+}
+.intro-beneficios p{
+  color: #ccc;
+  margin-bottom: 16px;
+}
+.intro-beneficios h3{
+  color: #87cefa;
+  margin-top: 30px;
+  font-size: 1.2rem;
+}
+.intro-beneficios ul{
+  margin-top: 10px;
+  padding-left: 20px;
+  color: #bbb;
+}
+.intro-beneficios ul li{
+  margin-bottom: 10px;
+}
+
+.video-container{
+  text-align: center;
+  margin-top: 40px;
+}
+
+.videoBeneficios{
+    text-align: center;
+    margin: 40px 0;
+
+}
+.video-button{
+  background-color: #7d1b1b;
+  color: #fff;
+  padding: 14px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3 ease;
+}
+.video-button:hover{
+  background-color: #a22c2c;
+}
+
+.footer{
+  background-color: #0a0a0a ;
+  text-align: center;
+  padding: 20px 0;
+  color: #666;
+  font-size: 14px;
+  margin-top: 60px;
+
+}

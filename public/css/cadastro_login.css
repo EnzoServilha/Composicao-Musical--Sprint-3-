@@ -1,0 +1,96 @@
+body{
+margin: 0;
+background-image: url("../assets/imgs/um-homem-toca-uma-guitarra-acustica-closeup_169016-20618.avif");
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+height: 100vh;
+}
+
+body::before{
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background-color: rgba(0, 0, 0, 0.6);
+z-index: 0;
+}
+
+
+.pai{  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+}
+
+
+.principal{
+    flex: 1;
+    max-width: 420px;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    position: relative;
+    z-index: 2;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+
+.campo span {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.campo input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    transition: border 0.3s ease;
+}
+.campo a{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.botao_cadastro_login{
+   background-color: #00bcd4;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+}
+.acao a{
+    display: flex;
+    justify-content: center;
+}
+.formulario h1{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+
+
