@@ -9,7 +9,7 @@ html, body {
     position: relative;
     height: 90vh;
     color: white;
-    background-image: url('../Fotos/logan-weaver-lgnwvr-OxlzI0sVWVo-unsplash\ \(1\).jpg');
+    background-image: url('../assets/imgs/logan-weaver-lgnwvr-OxlzI0sVWVo-unsplash\ \(1\).jpg');
     background-size: cover;
     background-position: center;
     display: flex;

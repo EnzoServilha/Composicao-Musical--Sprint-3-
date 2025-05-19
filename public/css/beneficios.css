@@ -8,7 +8,7 @@ body{
  position: relative;
     height: 90vh;
     color: white;
-    background-image: url('../Fotos/festival-show-show-tema-borrao-de-fundo.jpg');
+    background-image: url('../assets/imgs/festival-show-show-tema-borrao-de-fundo.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
