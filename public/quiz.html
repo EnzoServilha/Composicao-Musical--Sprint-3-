@@ -41,23 +41,23 @@
 
             <div id="opcoes" class="flex-colunar padding-8">
 
-                <label class="botaoOpcao">
-                    <input type="radio"  name="option" value="alternativaA" onclick="respostaSelecionada()"/>
+                <label class="botaoOpcao" for="primeiraOpcao">
+                    <input id="primeiraOpcao" type="radio"  name="option" value="alternativaA" onclick="respostaSelecionada()"/>
                     <span id="labelOpcaoUm" class="option"></span>
                 </label>
 
-                <label class="botaoOpcao">
-                    <input type="radio"  name="option" value="alternativaB" onclick="respostaSelecionada()"/>
+                <label class="botaoOpcao" for="segundaOpcao">
+                    <input id="segundaOpcao" type="radio"  name="option" value="alternativaB" onclick="respostaSelecionada()"/>
                     <span id="labelOpcaoDois" class="option"></span>
                 </label>
 
-                <label class="botaoOpcao">
-                    <input type="radio" name="option" value="alternativaC" onclick="respostaSelecionada()" />
+                <label class="botaoOpcao" for="terceiraOpcao">
+                    <input id="terceiraOpcao" type="radio" name="option" value="alternativaC" onclick="respostaSelecionada()" />
                     <span id="labelOpcaoTres" class="option"></span>
                 </label>
 
-                <label class="botaoOpcao">
-                    <input type="radio" name="option" value="alternativaD" onclick="respostaSelecionada()" />
+                <label class="botaoOpcao" for="quartaOpcao">
+                    <input id="quartaOpcao" type="radio" name="option" value="alternativaD" onclick="respostaSelecionada()" />
                     <span id="labelOpcaoQuatro" class="option"></span>
                 </label>
 
@@ -77,21 +77,21 @@
     const listaDeQuestoes = [
 
         {
-            pergunta: "Qual mês tem 30 dias?",
-            alternativaA: "Janeiro",
-            alternativaB: "Dezembro",
-            alternativaC: "Junho",
-            alternativaD: "Agosto",
+            pergunta: "Qual elemento musical é responsável pela ´linha melodica´ de uma música ?",
+            alternativaA: "Harmonia",
+            alternativaB: "Ritmo",
+            alternativaC: "Melodia",
+            alternativaD: "Timbre",
             alternativaCorreta: "alternativaC"
         },
 
         {
-            pergunta: "Quantas horas tem em um dia?",
-            alternativaA: "30 horas",
-            alternativaB: "38 horas",
-            alternativaC: "48 horas",
-            alternativaD: "24 horas",
-            alternativaCorreta: "alternativaD"
+            pergunta: "Quwm compos as quatro estações?",
+            alternativaA: "Vivaldi",
+            alternativaB: "Mozart",
+            alternativaC: "Tchaikovsky",
+            alternativaD: "Debussy",
+            alternativaCorreta: "alternativaA"
         },
 
         {
@@ -239,30 +239,30 @@
     function checarResposta() {
         const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual] 
         const respostaQuestaoAtual = questaoAtual.alternativaCorreta 
-
         const options = document.getElementsByName("option"); 
 
         let alternativaCorreta = null 
 
         options.forEach((option) => {
             if (option.value === respostaQuestaoAtual) {
-                alternativaCorreta = option.labels[0].id
+                alternativaCorreta = option.nextElementSibling  //pega o span irmao do input
             }
         })
 
         options.forEach((option) => {
-            const label = document.getElementById(option.labels[0].id)
-            label.classList.remove("text-sucess-with-bg", "text-error-with-bg")
+            const label = option.nextElementSibling  
 
             if (option.checked  && option.value === respostaQuestaoAtual) {
                 label.classList.add("text-sucess-with-bg")
                 pontuacaoFinal++
                 certas++               
             } else if (option.checked && option.value !== respostaQuestaoAtual) {
-                document.getElementById(alternativaCorreta).classList.add("text-sucess-with-bg")
+                label.classList.add("text-error-with-bg")
+                alternativaCorreta.classList.add("text-sucess-with-bg")
                 erradas++
             }
         })
+
         document.getElementById('spanCertas').innerText = certas
         document.getElementById('spanErradas').innerText = erradas
     }

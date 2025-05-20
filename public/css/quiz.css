@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(0, 0, 0);
+    background-color: gray;
     margin: 0;
     padding:/*40px*/ 20px;
     display: flex;
@@ -27,13 +27,9 @@ body{
     user-select: none;
 } 
 .botaoOpcao input[type="radio"]{ /*esconde input e ainda fica clicavel*/
-    position: absolute;
+    
     opacity: 0;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    pointer-events: none;
+    position: absolute;
 
 }
 
@@ -46,12 +42,17 @@ body{
 
 }
 
+.botaoOpcao input[type="radio"]:checked + span{
+    background-color: #d4edda;
+    color: #155724
+}
+
 .botaoOpcao input{
     margin-right: 10px;
 
  } 
 .botaoOpcao:hover{
-    background-color: #f0f0f0;
+    background-color: #4a1f1f;
 }
 
 #pontuacaoEJogo{
@@ -62,7 +63,7 @@ body{
     display: flex;
     flex-direction: column;
     gap: 25px;  /*Espaço!!!*/
-    background-color: #2b2424;  /*Cor engloba Opções*/
+    background-color: rgb(100, 100, 100);  /*Cor engloba Opções*/
     box-shadow: rgba(0, 0, 0, 0.1);
     /*box-sizing: border-box; tirar comentario*/
 }
@@ -96,8 +97,8 @@ body{
     font-weight: 600;
     margin: 15px 0;
     line-height: 1.4;
-    color: #999;
-    border-bottom: 2px solid #ddd;
+    color: #3845a6;
+    border-bottom: 2px solid #00f5f9;
 }
 
 #infoAlternativas{
@@ -110,7 +111,7 @@ body{
     margin-bottom: 20px;
 }
 #opcoes span{
-    background-color: rgb(52, 37, 49);
+    background-color: rgb(37, 44, 52);
     color: gray;
     padding: 15px;
     border-radius: 6px;
@@ -123,11 +124,11 @@ body{
     align-items: center;
     text-align: center;
     height: auto;
-    transition: backgrounf-color 0.3s ease;
+    transition: background-color 0.3s ease;
     box-shadow: 0 5px 10px rgba(0, 123, 300, 0.2);
 }
 #opcoes span:hover{
-    background-color: aquamarine;
+    background-color: rgb(88, 180, 149);
     box-shadow: 0 8px 20px rgba(40, 147, 60, 0.6);
 }
 
@@ -137,7 +138,7 @@ input[type="radio"]{
 
 #opcoes span.selected{
     background-color: black;
-    box-shadow: purple;
+    box-shadow: rgb(184, 100, 184);
 }
 
 #botoes{
