@@ -117,6 +117,89 @@
 </body>
 <script>
 
+    const dadosSimulados = {
+    acertosPorTopico:[
+        {topico: 'teoria musical', acertos: 80},
+        {topico: 'composiçao', acertos: 60},
+        {topico: 'leitura', acertos: 90} 
+    ],
+    preferenciasMusicais: [
+        {genero: 'Rock', preferencia: 40},
+        {genero: 'Classico', preferencia: 10},
+        {genero: 'Eletronica', preferencia: 10},
+        {genero: 'Pop', preferencia: 40}
+    ],
+    progress: [
+        {semana: 'semana 1', taxa: 50},
+        {semana: 'semana 2', taxa: 65},
+        {semana: 'semana 3', taxa: 75},
+        {semana: 'semana 4', taxa: 85}
+    ]
+
+
+
+}
+
+     // Função chamada ao carregar a página para obter e processar os dados
+    function obterDados() {
+
+        document.querySelector('.taxa_acertos').textContent = "75%"
+        document.querySelector('.tempo_medio').textContent = "45s%"
+        document.querySelector('.total_participantes').textContent = "128"
+
+        plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
+         // Aqui seria a função que obteria os dados do banco de dados
+         // No caso, aqui você colocaria o fetch que teria o endereço da sua rota que você criou na pasta /routes e chamaria a função plotarGraficoLinha nessa função. Exemplo:
+ 
+          fetch('/obterDados')
+          .then(function(response){
+            return response.json();
+          })
+          .then(function(data){
+            plotarGraficoLinha(data);
+            plotarGraficoBarra(data);
+          })
+          .catch(function(err){
+            console.log(err);
+          })
+ 
+         // Como eu não configurei as rotas, eu criei um array com os dados para simular a obtenção dos dados
+         var dados = [{
+             jogador: 'Endrick',
+             votos: 10
+         },
+         {
+             jogador: 'João',
+             votos: 5
+         },
+         {
+             jogador: 'Maria',
+             votos: 15
+         },
+         {
+             jogador: 'José',
+             votos: 20
+         },
+         {
+             jogador: 'Pedro',
+             votos: 25
+         },
+         {
+             jogador: 'Ana',
+             votos: 30
+         }]
+ 
+         // Chamando a função para plotar o gráfico de linha com os dados
+         plotarGraficoLinha(dados);
+         // Chamando a função para plotar o gráfico de barra com os dados
+         plotarGraficoBarra(dados)
+    }
+
+
+
+
+
+
     // Alternar entre botoes ativos
     function setActiveButton(activeButton) {
         document.querySelectorAll('.button-chart').forEach(btn => {
@@ -128,7 +211,7 @@
 
 
     // Graficos de Acertos Por Tópicos
-    function plotarGraficoAcertosPorTopico(dados) {
+    function exibirAcertosPorTopico(dados) {
         setActiveButton(event.target)
         document.getElementById('divAcertosTopico').classList.remove('display-none')
         document.getElementById('divAcertosTopico').classList.add('display-block')
@@ -167,7 +250,7 @@
     }
 
     // Função plotar Grafico Preferencias
-    function plotarGraficoPreferenciasMusicais() {
+    function exibirPreferenciasMusicais () {
         setActiveButton(event.target)
 
 
@@ -195,7 +278,7 @@
                 responsive: true
             }
         })
-        plotarGraficoAcertosPorTopico(dadosSimulados.preferenciasMusicais)
+        plotarGraficoPreferenciasMusicais(dadosSimulados.preferenciasMusicais)
     }
 
 
@@ -236,69 +319,13 @@
             }
         })
 
+        exibirProgressoAprendizado(dadosSimulados.progress)
     }
 
 
 
 
-
-
-
-
-    // Função chamada ao carregar a página para obter e processar os dados
-    function obterDados() {
-
-        document.querySelector('.taxa_acertos').textContent = "75%"
-        document.querySelector('.tempo_medio').textContent = "45s%"
-        document.querySelector('.total_participantes').textContent = "128"
-
-        plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
-        /* // Aqui seria a função que obteria os dados do banco de dados
-         // No caso, aqui você colocaria o fetch que teria o endereço da sua rota que você criou na pasta /routes e chamaria a função plotarGraficoLinha nessa função. Exemplo:
- 
-         // fetch('/obterDados')
-         // .then(function(response){
-         //   return response.json();
-         // })
-         // .then(function(data){
-         //   plotarGraficoLinha(data);
-         //   plotarGraficoBarra(data);
-         // })
-         // .catch(function(err){
-         //   console.log(err);
-         // })
- 
-         // Como eu não configurei as rotas, eu criei um array com os dados para simular a obtenção dos dados
-         var dados = [{
-             jogador: 'Endrick',
-             votos: 10
-         },
-         {
-             jogador: 'João',
-             votos: 5
-         },
-         {
-             jogador: 'Maria',
-             votos: 15
-         },
-         {
-             jogador: 'José',
-             votos: 20
-         },
-         {
-             jogador: 'Pedro',
-             votos: 25
-         },
-         {
-             jogador: 'Ana',
-             votos: 30
-         }]
- 
-         // Chamando a função para plotar o gráfico de linha com os dados
-         plotarGraficoLinha(dados);
-         // Chamando a função para plotar o gráfico de barra com os dados
-         plotarGraficoBarra(dados)*/
-    }
+   
 
     // Função para plotar o gráfico de linha
     function plotarGraficoLinha(dados) {

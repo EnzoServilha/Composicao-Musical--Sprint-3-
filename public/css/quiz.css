@@ -52,7 +52,7 @@ body{
 
  } 
 .botaoOpcao:hover{
-    background-color: #4a1f1f;
+    background-color: #000000;
 }
 
 #pontuacaoEJogo{
@@ -63,17 +63,28 @@ body{
     display: flex;
     flex-direction: column;
     gap: 25px;  /*Espaço!!!*/
-    background-color: rgb(100, 100, 100);  /*Cor engloba Opções*/
-    box-shadow: rgba(0, 0, 0, 0.1);
+    background-color: rgb(77, 76, 76);  /*Cor engloba Opções*/
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
     /*box-sizing: border-box; tirar comentario*/
 }
 #pontuacao{
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-bottom: 15px solid gray;
-    justify-content: space-between;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(to right, #00b4db, #0083b0);
+    position: relative;
 }
+#pontuacao::after{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, #00b4db, #0083b0);
+}
+
 #pontuacaoFinal{
     margin-top: 15px;
     font-weight: bold;
@@ -97,12 +108,13 @@ body{
     font-weight: 600;
     margin: 15px 0;
     line-height: 1.4;
-    color: #3845a6;
-    border-bottom: 2px solid #00f5f9;
+    color: #000000;
+    border-bottom: 2px solid #6bb7b9;
 }
 
 #infoAlternativas{
     margin-bottom: 10px;
+    color: #000000;
 }
 #opcoes{
     display: flex;
@@ -128,7 +140,7 @@ body{
     box-shadow: 0 5px 10px rgba(0, 123, 300, 0.2);
 }
 #opcoes span:hover{
-    background-color: rgb(88, 180, 149);
+    background-color: #00bcd4;;
     box-shadow: 0 8px 20px rgba(40, 147, 60, 0.6);
 }
 
@@ -161,7 +173,7 @@ button{
 }
 
 button:hover:not(:disabled){ /*Quando o botão poder ser clicado */ 
-    background-color: rgb(38, 160, 154);
+    background-color: rgb(255, 255, 255);
 }
 
 button:disabled   /*Quando botão tiver desativado !Essa cor!*/
@@ -177,4 +189,9 @@ button:disabled   /*Quando botão tiver desativado !Essa cor!*/
 .text-error-with-bg{
     background-color: #f77c7c;
     
+}
+
+.flex-opcoes{
+    display: flex;
+    flex-direction: column;
 }
