@@ -16,3 +16,9 @@ email	varchar(45),
 senha	varchar(45)
 );
 
+create table quiz(
+idQuiz  int primary key auto_increment,
+fkUsuarios 	int,
+qtdRespostas	varchar(45),
+foreign key (fkUsuarios) references usuarios(idUsuarios)
+);

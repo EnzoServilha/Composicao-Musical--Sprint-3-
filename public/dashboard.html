@@ -151,43 +151,36 @@
          // Aqui seria a função que obteria os dados do banco de dados
          // No caso, aqui você colocaria o fetch que teria o endereço da sua rota que você criou na pasta /routes e chamaria a função plotarGraficoLinha nessa função. Exemplo:
  
-          fetch('/obterDados')
-          .then(function(response){
-            return response.json();
+          fetch('/api/acertos_por_topico')
+          .then(response => response.json())
+          .then(data => {
+            plotarGraficoAcertosPorTopico(data)
           })
-          .then(function(data){
-            plotarGraficoLinha(data);
-            plotarGraficoBarra(data);
+          .catch(err => {
+            console.error("Erro ao obter dados de acertos por tópico", err);
+            
           })
-          .catch(function(err){
-            console.log(err);
+          
+          fetch('/api/preferencias_musicais')
+          .then(response => response.json())
+          .then(data => {
+            plotarGraficoPreferenciasMusicais(data)
           })
- 
-         // Como eu não configurei as rotas, eu criei um array com os dados para simular a obtenção dos dados
-         var dados = [{
-             jogador: 'Endrick',
-             votos: 10
-         },
-         {
-             jogador: 'João',
-             votos: 5
-         },
-         {
-             jogador: 'Maria',
-             votos: 15
-         },
-         {
-             jogador: 'José',
-             votos: 20
-         },
-         {
-             jogador: 'Pedro',
-             votos: 25
-         },
-         {
-             jogador: 'Ana',
-             votos: 30
-         }]
+          .catch(err => {
+            console.error("Erro ao obter dados de Preferencias Musicais", err);
+          })
+
+
+          fetch('/api/progresso_aprendizado')
+          .then(response => response.json())
+          .then(data => {
+            plotarGraficoProgressoAprendizado(data)
+          })
+          .catch(err => {
+            console.error("Erro ao obter dados de Progresso Aprendizado", err);
+          })
+
+
  
          // Chamando a função para plotar o gráfico de linha com os dados
          plotarGraficoLinha(dados);
@@ -212,15 +205,16 @@
 
     // Graficos de Acertos Por Tópicos
     function exibirAcertosPorTopico(dados) {
-        setActiveButton(event.target)
-        document.getElementById('divAcertosTopico').classList.remove('display-none')
+        setActiveButton(event.target) // Escolher o grafico escolhido 
+
+       /* document.getElementById('divAcertosTopico').classList.remove('display-none')
         document.getElementById('divAcertosTopico').classList.add('display-block')
 
         document.getElementById('divPreferenciasMusicais').classList.remove('display-block')
         document.getElementById('divPreferenciasMusicais').classList.add('display-none')
 
         document.getElementById('divProgressoAprendizado').classList.remove('display-block')
-        document.getElementById('divProgressoAprendizado').classList.add('display-none')
+        document.getElementById('divProgressoAprendizado').classList.add('display-none')*/
 
 
 
@@ -246,7 +240,7 @@
             }
         })
 
-        plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
+       
     }
 
     // Função plotar Grafico Preferencias
@@ -278,8 +272,10 @@
                 responsive: true
             }
         })
-        plotarGraficoPreferenciasMusicais(dadosSimulados.preferenciasMusicais)
+        
     }
+
+
 
 
     // Função Plotar Progresso de Aprendizado 
@@ -319,7 +315,7 @@
             }
         })
 
-        exibirProgressoAprendizado(dadosSimulados.progress)
+     
     }
 
 
@@ -330,35 +326,49 @@
     // Função para plotar o gráfico de linha
     function plotarGraficoLinha(dados) {
 
-        // Separando os rótulos (labels) e os dados dos votos
+      /*  // Separando os rótulos (labels) e os dados dos votos
         var votos = [];
         var jogadores = [];
+*/
 
-        // Preenchendo os arrays com os dados
+
+
+
+       /* // Preenchendo os arrays com os dados
         for (var i = 0; i < dados.length; i++) {
             votos.push(dados[i].votos);
             jogadores.push(dados[i].jogador);
-        }
+        }*/
 
         // Capturando o elemento canvas pelo id 
+
         var ctx = document.getElementById('linha').getContext('2d');
         // Criando o gráfico de linha usando o Chart.js
         var myChart = new Chart(ctx, {
             type: 'line', // Tipo de gráfico: linha
             data: { // Dados para o gráfico
-                labels: jogadores, // Rótulos no eixo X
+                labels: dados.map(item => item.pergunta_id),
                 datasets: [{
-                    label: 'Votos', // Nome do conjunto de dados
-                    data: votos, // Dados dos votos
+                    label: "Acertos por pergunta",
+                    data: dados.map(item => item.acertos),
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)', // Cor de fundo das linhas
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)', // Cor da borda das linhas
                     ],
-                    borderWidth: 1 // Largura da borda das linhas
+                    borderWidth: 1 ,// Largura da borda das linhas
+                    fill: true,
+                    tension: 0.1
                 }]
             },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
         });
     }
 

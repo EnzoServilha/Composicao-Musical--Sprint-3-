@@ -66,10 +66,10 @@
 </body>
 <script>
 
-    // Array para armazenar empresas cadastradas para validação de código de ativação 
-    // let listaEmpresasCadastradas = [];
+    let qtd_tentativa = 20
 
     function cadastrar() {
+        var resposta = ""
         // aguardar();
 
         //Recupere o valor da nova input pelo nome do id
@@ -77,10 +77,10 @@
         var nomeVar = nome_input.value;
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
+        var confirmarSenha = confirmacao_senha_input.value
 
 
 
-        //var idEmpresaVincular = 1
 
 
         // Verificando se há algum campo em branco
@@ -99,6 +99,21 @@
         } else {
             setTimeout(sumirMensagem, 5000);
         }
+
+
+        if(!emailVar.includes('@') && !emailVar.includes('.')){
+                qtd_tentativa--
+                resposta = 'Email Inválido.'
+    
+              } else if(senhaVar.length < 8 || senhaVar.length > 128 || !CaracterEspeciais.some(char => senhaVar.includes(char))){
+                qtd_tentativa--
+                resposta = 'Senha inválida.<br><br>Deve estar entre 8 e 128 caracteres e conter ao menos um caractere especial.'
+    
+              } else if(confirmarSenha != senhaVar){
+                resposta = 'A confirmação de senha está diferente'}
+
+
+
 
 
         // Enviando o valor da nova input
@@ -141,6 +156,7 @@
             });
 
         return false;
+        div_resposta.innerHTML = resposta
     }
 
     // Listando empresas cadastradas 
