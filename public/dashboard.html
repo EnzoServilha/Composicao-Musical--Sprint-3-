@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body onload="obterDados()"> <!-- Chamando a função obterDados ao carregar a página -->
+<body onload="obterDadosGrafico()"> <!-- Chamando a função obterDados ao carregar a página -->
     <nav class="navbar-dash">
         <div class="logo">Composição</div>
         <ul class="nav-links">
@@ -25,10 +25,10 @@
         </div>
     </nav>
 
-    <!-- Elemento canvas onde o gráfico de linha será desenhado 
+     Elemento canvas onde o gráfico de linha será desenhado 
     <canvas id="linha"></canvas>
     <canvas id="barra"></canvas>
-    Elemento canvas onde o gráfico de barra será desenhado -->
+    Elemento canvas onde o gráfico de barra será desenhado 
 
 
     <div class="englobaTudo">
@@ -36,11 +36,11 @@
         <!-- Cards Kpi's-->
 
         
-        <div class="button-nav_dash">
-            <button class="button-chart" onclick="exibirAcertosPorTopico()">Acertos por tópico </button>
-            <button class="button-chart" onclick="exibirPreferenciasMusicais()">Preferencias Musicais </button>
-            <button class="button-chart" onclick="exibirProgressoAprendizado()">Progresso Aprendizado </button>
-        </div>
+      <!--  <div class="button-nav_dash">
+            <button class="button-chart" onclick="exibirAcertosPorTopico(event)">Acertos por tópico </button>
+            <button class="button-chart" onclick="exibirPreferenciasMusicais(event)">Preferencias Musicais </button>
+            <button class="button-chart" onclick="exibirProgressoAprendizado(event)">Progresso Aprendizado </button>
+        </div> -->
 
         
 
@@ -48,15 +48,16 @@
             <h2 class="tituloGrafico" id="titulo_grafico">Acertos por Tópico</h2>
 
             <div id="divAcertosTopico" class="display-block">
-                <canvas id="acertos_topico"></canvas>
+              
             </div>
+
 
             <div id="divPreferenciasMusicais" class="display-none">
                 <canvas id="preferencias_musicais"></canvas>
             </div>
 
             <div id="divProgressoAprendizado" class="display-none">
-                <canvas id="progesso_aprendizado"></canvas>
+                <canvas id="progresso_aprendizado"></canvas>
             </div>
 
         </div>
@@ -116,7 +117,70 @@
 
 </body>
 <script>
+    let chartAcertosTopico;
+    let chartPreferenciasMusicais;
+    let chartProgressoAprendizado;
+    
 
+    const dadosSimulados = {
+    acertosPorTopico:[
+        {topico: 'teoria musical', acertos: 80},
+        {topico: 'composiçao', acertos: 60},
+        {topico: 'leitura', acertos: 90} 
+    ],
+    preferenciasMusicais: [
+        {genero: 'Rock', preferencia: 40},
+        {genero: 'Classico', preferencia: 10},
+        {genero: 'Eletronica', preferencia: 10},
+        {genero: 'Pop', preferencia: 40}
+    ],
+    progress: [
+        {semana: 'semana 1', taxa: 50},
+        {semana: 'semana 2', taxa: 65},
+        {semana: 'semana 3', taxa: 75},
+        {semana: 'semana 4', taxa: 85}
+    ]
+
+
+
+}
+/*
+     // Função chamada ao carregar a página para obter e processar os dados
+    function obterDados() {
+
+        document.querySelector('.taxa_acertos').textContent = "75%"
+        document.querySelector('.tempo_medio').textContent = "45s"
+        document.querySelector('.total_participantes').textContent = "128"
+
+        plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
+         // Aqui seria a função que obteria os dados do banco de dados
+         // No caso, aqui você colocaria o fetch que teria o endereço da sua rota que você criou na pasta /routes e chamaria a função plotarGraficoLinha nessa função. Exemplo:
+ 
+          fetch('/obterDados')
+          .then(function(response){
+            return response.json();
+          })
+          .then(function(data){
+            plotarGraficoLinha(data);
+            plotarGraficoBarra(data);
+          })
+          .catch(function(err){
+            console.log(err);
+          })
+ 
+
+         // Chamando a função para plotar o gráfico de linha com os dados
+         plotarGraficoLinha(dados);
+         // Chamando a função para plotar o gráfico de barra com os dados
+         plotarGraficoBarra(dados)
+    }
+
+
+
+
+
+
+    /*
     // Alternar entre botoes ativos
     function setActiveButton(activeButton) {
         document.querySelectorAll('.button-chart').forEach(btn => {
@@ -125,10 +189,8 @@
         activeButton.classList.add('active')
     }
 
-
-
     // Graficos de Acertos Por Tópicos
-    function plotarGraficoAcertosPorTopico(dados) {
+    function exibirAcertosPorTopico(event, dados) {
         setActiveButton(event.target)
         document.getElementById('divAcertosTopico').classList.remove('display-none')
         document.getElementById('divAcertosTopico').classList.add('display-block')
@@ -141,7 +203,7 @@
 
 
 
-        const ctx = document.getElementById('acertos_topico').getContext('2d')
+       /* const ctx = document.getElementById('acertos_topico').getContext('2d')
         new Chart(ctx, {
             type: 'bar',
             data: {
@@ -161,13 +223,13 @@
                     }
                 }
             }
-        })
+        }) */
 
-        plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
-    }
-
+        /*plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico) */
+    //}  
+ /*
     // Função plotar Grafico Preferencias
-    function plotarGraficoPreferenciasMusicais() {
+    function exibirPreferenciasMusicais (event) {
         setActiveButton(event.target)
 
 
@@ -178,7 +240,7 @@
 
 
 
-        const ctx = document.getElementById('preferencias_musicais').getContext('2d')
+       /* const ctx = document.getElementById('preferencias_musicais').getContext('2d')
         new Chart(ctx, {
             type: 'pie',
             data: {
@@ -195,12 +257,12 @@
                 responsive: true
             }
         })
-        plotarGraficoAcertosPorTopico(dadosSimulados.preferenciasMusicais)
+        plotarGraficoPreferenciasMusicais(dadosSimulados.preferenciasMusicais)
     }
 
 
     // Função Plotar Progresso de Aprendizado 
-    function plotarGraficoProgressoAprendizado(dados) {
+    function exibirProgressoAprendizado(event, dados) {
         setActiveButton(event.target)
 
         
@@ -211,7 +273,7 @@
 
 
 
-        const ctx = document.getElementById('progesso_aprendizado').getContext('2d')
+        const ctx = document.getElementById('progresso_aprendizado').getContext('2d')
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -235,142 +297,220 @@
                 }
             }
         })
+            
+      //  exibirProgressoAprendizado(dadosSimulados.progress)
+    }*/
 
-    }
+function obterDadosGrafico() {
+    
+    
 
+    fetch(`/quiz/erradas`, { cache: 'no-store' }).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (resposta) {
+                console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                
+                if(!resposta ||  resposta.length === 0){
+                    console.warn("Nenhum dado Recebido")
+                    return;
+                }
 
+                resposta.reverse()    //mais recente pro mais antigo 
 
+                erradas(resposta)
+            });
+        } else {
+            console.error('Nenhum dado encontrado ou erro na API');
+        }
+    })
+        .catch(function (error) {
+            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+        });   
+        }
+    
+    
+    
+    
+    
+    /* fetch(`/quiz/erradas`, { cache: 'no-store' })
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse()
+                    ;
 
+                    erradas(resposta);
 
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }*/
+    
+   /* function erradas(resposta) {
 
+        console.log('iniciando plotagem do gráfico...');
 
+        // Criando estrutura para plotar gráfico - labels
+        let labels = [];
 
-    // Função chamada ao carregar a página para obter e processar os dados
-    function obterDados() {
+        // Criando estrutura para plotar gráfico - dados
+        let dados = {
+            labels: labels,
+            datasets: [{
+                label: '',
+                data: [],
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        };
 
-        document.querySelector('.taxa_acertos').textContent = "75%"
-        document.querySelector('.tempo_medio').textContent = "45s%"
-        document.querySelector('.total_participantes').textContent = "128"
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(resposta)
 
-        plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
-        /* // Aqui seria a função que obteria os dados do banco de dados
-         // No caso, aqui você colocaria o fetch que teria o endereço da sua rota que você criou na pasta /routes e chamaria a função plotarGraficoLinha nessa função. Exemplo:
- 
-         // fetch('/obterDados')
-         // .then(function(response){
-         //   return response.json();
-         // })
-         // .then(function(data){
-         //   plotarGraficoLinha(data);
-         //   plotarGraficoBarra(data);
-         // })
-         // .catch(function(err){
-         //   console.log(err);
-         // })
- 
-         // Como eu não configurei as rotas, eu criei um array com os dados para simular a obtenção dos dados
-         var dados = [{
-             jogador: 'Endrick',
-             votos: 10
-         },
-         {
-             jogador: 'João',
-             votos: 5
-         },
-         {
-             jogador: 'Maria',
-             votos: 15
-         },
-         {
-             jogador: 'José',
-             votos: 20
-         },
-         {
-             jogador: 'Pedro',
-             votos: 25
-         },
-         {
-             jogador: 'Ana',
-             votos: 30
-         }]
- 
-         // Chamando a função para plotar o gráfico de linha com os dados
-         plotarGraficoLinha(dados);
-         // Chamando a função para plotar o gráfico de barra com os dados
-         plotarGraficoBarra(dados)*/
-    }
-
-    // Função para plotar o gráfico de linha
-    function plotarGraficoLinha(dados) {
-
-        // Separando os rótulos (labels) e os dados dos votos
-        var votos = [];
-        var jogadores = [];
-
-        // Preenchendo os arrays com os dados
-        for (var i = 0; i < dados.length; i++) {
-            votos.push(dados[i].votos);
-            jogadores.push(dados[i].jogador);
+        // Inserindo valores recebidos em estrutura para plotar o gráfico
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+            labels.push(registro.nome);
+            dados.datasets[0].data.push(registro.quantidade);
         }
 
-        // Capturando o elemento canvas pelo id 
-        var ctx = document.getElementById('linha').getContext('2d');
-        // Criando o gráfico de linha usando o Chart.js
-        var myChart = new Chart(ctx, {
-            type: 'line', // Tipo de gráfico: linha
-            data: { // Dados para o gráfico
-                labels: jogadores, // Rótulos no eixo X
-                datasets: [{
-                    label: 'Votos', // Nome do conjunto de dados
-                    data: votos, // Dados dos votos
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)', // Cor de fundo das linhas
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)', // Cor da borda das linhas
-                    ],
-                    borderWidth: 1 // Largura da borda das linhas
-                }]
-            },
-        });
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Labels:')
+        console.log(labels)
+        console.log('Dados:')
+        console.log(dados.datasets)
+        console.log('----------------------------------------------')
+
+        // Criando estrutura para plotar gráfico - config
+        const config = {
+            type: 'bar',
+            data: dados,
+        };
+
+        // Adicionando gráfico criado em div na tela
+        let myChart = new Chart(
+            document.getElementById(`acertos_topico`),
+            config
+        );
+
+        }*/
+
+
+        //chatgpt
+
+       function erradas(resposta) {
+    console.log('iniciando plotagem do gráfico...');
+
+    // Destruir gráfico anterior se existir
+    if (chartAcertosTopico) {
+        chartAcertosTopico.destroy();
+    }
+    // Vê se tem dados
+    if(!resposta || resposta.length === 0){
+        console.log("Nenhum dado recebido");
+        return
     }
 
-    // Função para plotar o gráfico de barra
-    function plotarGraficoBarra(dados) {
+/*    const labels = [];
+    const valores = [];*/
 
-        var votos = [];
-        var jogadores = [];
+    // Prepara arrays para labels e dados
+    const labels = resposta.map(item => item.nome)
+    const valores = resposta.map(item => item.quantidade)
 
-        // Preenchendo os arrays com os dados
-        for (var i = 0; i < dados.length; i++) {
-            votos.push(dados[i].votos);
-            jogadores.push(dados[i].jogador);
+
+
+   /* // Processando os dados
+    for (let i = 0; i < resposta.length; i++) {
+        labels.push(resposta[i].nome);
+        valores.push(resposta[i].quantidade);
+    }*/
+
+
+    // Tornar a div visível (apenas uma vez)
+  /*  document.getElementById('divAcertosTopico').classList.remove('display-none');
+    document.getElementById('divAcertosTopico').classList.add('display-block');*/
+
+    const divGrafico = document.getElementById('divAcertosTopico')
+
+
+    setTimeout(() => {
+        divGrafico.innerHTML = '<canvas id="acertos_topico"></canvas>'   // Recria se necessario    
+
+    const ctx = document.getElementById('acertos_topico').getContext('2d')
+
+       chartAcertosTopico = new Chart( ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Quantidade de Erros",
+                data: valores,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0
+                    }
+                }
+            }
         }
+       }) 
+    }, 10)
+    
+ 
 
-        // Capturando o elemento canvas pelo id 
-        var ctx = document.getElementById('barra').getContext('2d');
-        // Criando o gráfico de barra usando o Chart.js
-        var myChart = new Chart(ctx, {
-            type: 'bar', // Tipo de gráfico: barra
-            data: { // Dados para o gráfico
-                labels: jogadores, // Rótulos no eixo X
-                datasets: [{
-                    label: 'Votos', // Nome do conjunto de dados
-                    data: votos, // Dados dos votos
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)', // Cor de fundo das barras
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)', // Cor da borda das barras
-                    ],
-                    borderWidth: 1 // Largura da borda das barras
-                }]
-            },
-        });
-    }
+    // Configuração do gráfico
+   /* const config = {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Quantidade de Erros',
+                data: valores,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0 // Para mostrar apenas números inteiros
+                    }
+                }
+            }
+        }
+    }; */
 
+   /* // Criar e armazenar a instância do gráfico
+    chartAcertosTopico = new Chart(
+        document.getElementById('acertos_topico'),
+        config
+    );*/
+}
 
-
+</script>
 </script>
 
 </html>

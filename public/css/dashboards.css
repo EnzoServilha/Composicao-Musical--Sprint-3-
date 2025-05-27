@@ -101,7 +101,7 @@ canvas{
   max-height: 45%;
   margin-bottom: 40px;
   background: gray;
-  padding: 100px;
+  padding: 0;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
@@ -113,13 +113,18 @@ canvas{
   gap: 20px;
   margin-bottom: 30px
 }
-.cards-kpis{
+.card-kpis{
   background: #212124;
   border-left: 6px solid #007bff;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+#divAcertosTopico{
+  min-height: 420px;
+
 }
 
 .taxa_acertos, .tempo_medio, .total_participantes{

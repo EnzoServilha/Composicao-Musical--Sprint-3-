@@ -7,7 +7,9 @@ comandos para mysql server
 */
 
 create database composicao;
+
 use composicao;
+
 
 create table usuarios(
 idUsuarios 	int primary key auto_increment,
@@ -16,3 +18,16 @@ email	varchar(45),
 senha	varchar(45)
 );
 
+create table quiz(
+idQuiz		int primary key auto_increment,
+perguntas 	varchar(300)
+);
+
+create table desempenho (
+fkUsuarios 	int,
+fkQuiz		int,
+respostaCerta 	int,
+primary key (fkUsuarios, fkQuiz),
+foreign key (fkUsuarios) references usuarios(idUsuarios),
+foreign key (fkQuiz) references quiz(idQuiz) 
+  );

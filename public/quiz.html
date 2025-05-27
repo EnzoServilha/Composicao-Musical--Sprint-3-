@@ -39,7 +39,7 @@
                 <span><em>Escolha uma opção dentre as abaixo:</em></span>
             </div>
 
-            <div id="opcoes" class="flex-colunar padding-8">
+            <div id="opcoes" class="flex-opcoes padding-8">
 
                 <label class="botaoOpcao" for="primeiraOpcao">
                     <input id="primeiraOpcao" type="radio"  name="option" value="alternativaA" onclick="respostaSelecionada()"/>
@@ -73,9 +73,22 @@
     
 </body>
 <script>
+
+    if(!sessionStorage.ID_USUARIO){
+        alert("Você precisa estar logado para acessar o quiz")
+        window.location.href = "login.html"
+    }
     
     const listaDeQuestoes = [
 
+     {
+            pergunta: "O que é uma composição musical?",
+            alternativaA: "Dança Coreografada",
+            alternativaB: "Texto Literário ",
+            alternativaC: "Criação de músicas originaiss",
+            alternativaD: "Tipo de instrumento",
+            alternativaCorreta: "alternativaC"
+        },
         {
             pergunta: "Qual elemento musical é responsável pela ´linha melodica´ de uma música ?",
             alternativaA: "Harmonia",
@@ -84,9 +97,17 @@
             alternativaD: "Timbre",
             alternativaCorreta: "alternativaC"
         },
+         {
+            pergunta: "Qual foi o primeiro instrumento musical inventado  ?",
+            alternativaA: "Tambor",
+            alternativaB: "Lira",
+            alternativaC: "Flauta de osso",
+            alternativaD: "Harpa",
+            alternativaCorreta: "alternativaC"
+        },
 
         {
-            pergunta: "Quwm compos as quatro estações?",
+            pergunta: "Quem compos as quatro estações?",
             alternativaA: "Vivaldi",
             alternativaB: "Mozart",
             alternativaC: "Tchaikovsky",
@@ -95,13 +116,38 @@
         },
 
         {
-            pergunta: "Qual destes números é ímpar?",
-            alternativaA: "Dez",
-            alternativaB: "Doze",
-            alternativaC: "Oito",
-            alternativaD: "Onze",
+            pergunta: "Qual elemento NÃO é essencial em uma composição musical?",
+            alternativaA: "Melodia",
+            alternativaB: "Harmonia",
+            alternativaC: "TImbre",
+            alternativaD: "Letra",
             alternativaCorreta: "alternativaD"
-        }
+        },
+
+         {
+            pergunta: "O que é progressão harmõnica?",
+            alternativaA: "Uma sequência de acordes que dá suporte a melodia",
+            alternativaB: "Tipo de ritmo musical",
+            alternativaC: "Instrumento Musical",
+            alternativaD: "Um Compasso",
+            alternativaCorreta: "alternativaA"
+        },
+        {
+            pergunta: "Qual é o genero musical mais ouvido atualmente?",
+            alternativaA: "Rock",
+            alternativaB: "Pop",
+            alternativaC: "Sertanejo",
+            alternativaD: "Jazz",
+            alternativaCorreta: "alternativaB"
+        },
+        {
+            pergunta: "Qual foi a banda a verder mais discos da história?",
+            alternativaA: "The Rolling Stones",
+            alternativaB: "The Beatles",
+            alternativaC: "Queen",
+            alternativaD: "Pink Floyd",
+            alternativaCorreta: "alternativaB"
+        },
 
     ]
 
@@ -255,11 +301,79 @@
             if (option.checked  && option.value === respostaQuestaoAtual) {
                 label.classList.add("text-sucess-with-bg")
                 pontuacaoFinal++
-                certas++               
+                certas++        
+                const resposta = 1
+                fetch("/quiz/questoes", {
+                      method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                idUsuarios: Number(sessionStorage.ID_USUARIO),
+                                fkQuiz: numeroDaQuestaoAtual + 1,
+                                respostaCerta: resposta
+                            })
+
+                        })
+                            .then(res => {
+                                if (res.ok) {
+                                    console.log("Cadastro realizado com sucesso!");
+
+                                } else {
+                                    return res.text().then(texto => {
+                                        cardErro.style.display = "block";
+                                        mensagem_erro.innerHTML = texto;
+                                        setTimeout(sumirMensagem, 5000);
+                                    });
+                                }
+                            })
+                            .catch(erro => {
+                                console.error("Erro no cadastro:", erro);
+                                cardErro.style.display = "block";
+                                mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
+                                setTimeout(sumirMensagem, 5000);
+                            });
+
+
+
+
+                
             } else if (option.checked && option.value !== respostaQuestaoAtual) {
                 label.classList.add("text-error-with-bg")
                 alternativaCorreta.classList.add("text-sucess-with-bg")
                 erradas++
+                const resposta = 0
+                
+                fetch("/quiz/questoes", {
+                      method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                idUsuarios: sessionStorage.ID_USUARIO,
+                                fkQuiz: numeroDaQuestaoAtual + 1,
+                                respostaCerta: resposta
+                            })
+
+                        })
+                            .then(res => {
+                                if (res.ok) {
+                                    console.log("Cadastro realizado com sucesso!");
+
+                                } else {
+                                    return res.text().then(texto => {
+                                        cardErro.style.display = "block";
+                                        mensagem_erro.innerHTML = texto;
+                                        setTimeout(sumirMensagem, 5000);
+                                    });
+                                }
+                            })
+                            .catch(erro => {
+                                console.error("Erro no cadastro:", erro);
+                                cardErro.style.display = "block";
+                                mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
+                                setTimeout(sumirMensagem, 5000);
+                            });
             }
         })
 
@@ -295,15 +409,14 @@
         document.getElementById('pontuacaoFinal').style.display = "block"
         document.getElementById('spanPontuacaoFinal').innerText = pontuacaoFinal + ' acertos'
         
-        //Desativa botões dps de terminar 
-
-        
+        //Desativa botões dps de terminar
         btnProx.disabled = true
         btnTentarNovamente.disabled = false
 
         //Esconder se quiser
         document.getElementById('jogo').style.display = "none"
 
+        window.location = "dashboard.html";
     }
 
     
