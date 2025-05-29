@@ -11,7 +11,7 @@
 </head>
 
 <body onload="obterDadosGrafico()"> <!-- Chamando a função obterDados ao carregar a página -->
-    <nav class="navbar-dash">
+    <nav class="navbar">
         <div class="logo">Composição</div>
         <ul class="nav-links">
             <li> <a href="home.html">Home</a> </li>
@@ -25,42 +25,13 @@
         </div>
     </nav>
 
-     Elemento canvas onde o gráfico de linha será desenhado 
+    <!-- Elemento canvas onde o gráfico de linha será desenhado
     <canvas id="linha"></canvas>
     <canvas id="barra"></canvas>
-    Elemento canvas onde o gráfico de barra será desenhado 
+    Elemento canvas onde o gráfico de barra será desenhado-->
 
 
     <div class="englobaTudo">
-
-        <!-- Cards Kpi's-->
-
-        
-      <!--  <div class="button-nav_dash">
-            <button class="button-chart" onclick="exibirAcertosPorTopico(event)">Acertos por tópico </button>
-            <button class="button-chart" onclick="exibirPreferenciasMusicais(event)">Preferencias Musicais </button>
-            <button class="button-chart" onclick="exibirProgressoAprendizado(event)">Progresso Aprendizado </button>
-        </div> -->
-
-        
-
-        <div class="graficos">
-            <h2 class="tituloGrafico" id="titulo_grafico">Acertos por Tópico</h2>
-
-            <div id="divAcertosTopico" class="display-block">
-              
-            </div>
-
-
-            <div id="divPreferenciasMusicais" class="display-none">
-                <canvas id="preferencias_musicais"></canvas>
-            </div>
-
-            <div id="divProgressoAprendizado" class="display-none">
-                <canvas id="progresso_aprendizado"></canvas>
-            </div>
-
-        </div>
 
         <div class="cards">
 
@@ -74,33 +45,32 @@
                 <div class="corCardAlerta" id="cardTaxaAcertos"></div>
             </div>
 
-            <div class="card-kpis">
-                <h1 class="titulo">Tempo Médio</h1>
+             <div class="card-kpis">
+                <h1 class="titulo">Tempo Médio</h1> 
 
                 <div class="descricao">
-                    <p class="tempo_medio">45s</p>
-                </div>
+                    <p class="tempo_medio">45s</p> 
+                </div> 
 
-                <div class="corCardAlerta" id="cardTempoMedio"></div>
-            </div>
+                <div class="corCardAlerta" id="cardTempoMedio"></div> 
+            </div> 
 
 
             <div class="card-kpis">
-                <h1 class="titulo">Total Participantes</h1>
+                <h1 class="titulo">Participantes</h1>
 
                 <div class="descricao">
-                    <p class="total_participantes">20</p>
+                    <p class="total_participantes">0</p>
                 </div>
 
                 <div class="corCardAlerta" id="cardTotalParticipantes"></div>
             </div>
 
-
             <div class="card-kpis">
                 <h1 class="titulo">Engajamento</h1>
 
                 <div class="descricao">
-                    <p class="total_participantes">72%</p>
+                    <p class="total_participantes">72%</p> 
                 </div>
 
                 <div class="corCardAlerta" id="cardEngajamento"></div>
@@ -111,6 +81,37 @@
 
 
 
+        <div class="button-nav_dash">
+            <button class="button-chart" onclick="exibirAcertosPorTopico(event)">Acertos por tópico </button>
+            <button class="button-chart" onclick="exibirPreferenciasMusicais(event)">Preferencias Musicais </button>
+            <button class="button-chart" onclick="exibirProgressoAprendizado(event)">Progresso Aprendizado </button>
+        </div>
+        <!-- Cards Kpi's-->
+
+
+
+
+        <div class="graficos">
+            
+
+            <div id="divAcertosTopico" class="display-block">
+
+            </div>
+
+            
+            <div id="divPreferenciasMusicais" class="display-none">
+                <canvas id="preferencias_musicais"></canvas>
+            </div>
+
+            <div id="divProgressoAprendizado" class="display-none">
+                <canvas id="progresso_aprendizado"></canvas>
+            </div>
+
+            <div id="divAcertosPorUsuario" class="display-none">
+                <canvas id="acertos_por_usuario"></canvas>
+            </div>
+
+        </div>
 
 
     </div>
@@ -120,59 +121,355 @@
     let chartAcertosTopico;
     let chartPreferenciasMusicais;
     let chartProgressoAprendizado;
+    let chartContarAcertosPorUsuario;
+
+    function obterDadosGrafico() {
+        fetch(`/quiz/erradas`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                    if (!resposta || resposta.length === 0) {
+                        console.warn("Nenhum dado Recebido")
+                        return;
+                    }
+                    resposta.reverse()    //mais recente pro mais antigo 
+                    erradas(resposta)
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+
+
+
+
+        // Preferencias Musicas
+        fetch(`/quiz/preferenciasMusicais`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                    if (!resposta || resposta.length === 0) {
+                        console.warn("Nenhum dado Recebido")
+                        return;
+                    }
+                    resposta.reverse()    //mais recente pro mais antigo 
+                    preferenciasMusicais(resposta)
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+
+
+            //Acertos por usuario
+              fetch(`/quiz/contarAcertosPorUsuario`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                    if (!resposta || resposta.length === 0) {
+                        console.warn("Nenhum dado Recebido")
+                        return;
+                    }
+                    resposta.reverse()    //mais recente pro mais antigo 
+                    contarAcertosPorUsuario(resposta)
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+
+
+            //Kpi Total Participantes
+            fetch(`/quiz/totalParticipantes`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                    if (!resposta || resposta.length === 0) {
+                        console.warn("Nenhum dado Recebido")
+                        return;
+                    }
+                    resposta.reverse()    //mais recente pro mais antigo 
+                    totalParticipantes(resposta)
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
+    }
+    
     
 
-    const dadosSimulados = {
-    acertosPorTopico:[
-        {topico: 'teoria musical', acertos: 80},
-        {topico: 'composiçao', acertos: 60},
-        {topico: 'leitura', acertos: 90} 
-    ],
-    preferenciasMusicais: [
-        {genero: 'Rock', preferencia: 40},
-        {genero: 'Classico', preferencia: 10},
-        {genero: 'Eletronica', preferencia: 10},
-        {genero: 'Pop', preferencia: 40}
-    ],
-    progress: [
-        {semana: 'semana 1', taxa: 50},
-        {semana: 'semana 2', taxa: 65},
-        {semana: 'semana 3', taxa: 75},
-        {semana: 'semana 4', taxa: 85}
-    ]
+    //Referencia a tabela Desempenho 
+     function questoes(idUsuarios, idQuiz, acertou ) {
+        fetch(`/quiz/questoes`, {  method: 'POST', headers: {
+            'Content-Type': 'application/json'
+        },
+    body: JSON.stringify({
+        idUsuarios: idUsuarios,
+        fkQuiz: idQuiz,
+        respostaCerta: acertou ? 1 : 0
+    })})
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                    if (!resposta || resposta.length === 0) {
+                        console.warn("Nenhum dado Recebido")
+                        return;
+                    }
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+        }
 
 
 
-}
-/*
-     // Função chamada ao carregar a página para obter e processar os dados
-    function obterDados() {
 
-        document.querySelector('.taxa_acertos').textContent = "75%"
-        document.querySelector('.tempo_medio').textContent = "45s"
-        document.querySelector('.total_participantes').textContent = "128"
 
-        plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
-         // Aqui seria a função que obteria os dados do banco de dados
-         // No caso, aqui você colocaria o fetch que teria o endereço da sua rota que você criou na pasta /routes e chamaria a função plotarGraficoLinha nessa função. Exemplo:
- 
-          fetch('/obterDados')
-          .then(function(response){
-            return response.json();
-          })
-          .then(function(data){
-            plotarGraficoLinha(data);
-            plotarGraficoBarra(data);
-          })
-          .catch(function(err){
-            console.log(err);
-          })
- 
 
-         // Chamando a função para plotar o gráfico de linha com os dados
-         plotarGraficoLinha(dados);
-         // Chamando a função para plotar o gráfico de barra com os dados
-         plotarGraficoBarra(dados)
+
+    //mudar dps pq não é erradas e sim certas
+    function erradas(resposta) {
+
+        //Destroi Grafico
+        if (chartAcertosTopico) {
+            chartAcertosTopico.destroy()
+        }
+
+        if (!resposta || resposta.length === 0) {
+            return
+        }
+        const labels = resposta.map(item => item.nome)
+        const valores = resposta.map(item => item.quantidade)
+
+
+        /* // Processando os dados
+         for (let i = 0; i < resposta.length; i++) {
+             labels.push(resposta[i].nome);
+             valores.push(resposta[i].quantidade);
+         }*/
+
+        // Tornar a div visível (apenas uma vez)
+        /*  document.getElementById('divAcertosTopico').classList.remove('display-none');
+          document.getElementById('divAcertosTopico').classList.add('display-block');*/
+
+        const divGrafico = document.getElementById('divAcertosTopico')
+
+
+        setTimeout(() => {
+            divGrafico.innerHTML = '<canvas id="acertos_topico"></canvas>'   // Recria se necessario    
+
+            const ctx = document.getElementById('acertos_topico').getContext('2d')
+
+            chartAcertosTopico = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Acertos",
+                        data: valores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0
+                            }   
+                    },
+                    y: {
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }
+                 }
+             }
+                   /* responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0*/
+            })
+        }, 10)
+    
+    }
+
+
+    function preferenciasMusicais(resposta) {
+
+        //Destroi Grafico
+        if (chartPreferenciasMusicais) {
+            chartPreferenciasMusicais.destroy()
+        }
+
+        if (!resposta || resposta.length === 0) {
+            return
+        }
+        const labels = resposta.map(item => item.GeneroPreferido)
+
+
+
+        //const valores = resposta.map(item => item.Quantidade)
+        const valores = [] // vetor que armazena porcentagens 
+        let total = 0   // vai armazenar o total dos valores 
+
+        for (var i = 0; i < resposta.length; i++) { // verifica todas as posições de respostas, cada posição ele soma o numero dela e no fim o total tem o total :) kkkk
+            total += resposta[i].Quantidade // total vai ser tudo oq tiver nas posições somadas
+        }
+
+        // Pega quantidade, divide pela soma total, multiplica por 100 e vira porcentagem no final 
+        for (var j = 0; j < resposta.length; j++) {
+            valores.push(Number((resposta[j].Quantidade / total * 100).toFixed(1)))  // o push adiciona no vetor a quantidade
+        }
+
+
+
+        const divGrafico = document.getElementById('divPreferenciasMusicais')
+
+        setTimeout(() => {
+            divGrafico.innerHTML = '<canvas id="preferencias_musicais"></canvas>'   // Recria se necessario    
+
+            const ctx = document.getElementById('preferencias_musicais').getContext('2d')
+
+            chartPreferenciasMusicais = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Preferências Musicais dos Usuários",
+                        data: valores,
+                        backgroundColor: ['#42a5f5', '#ab47bc', '#26a69a', '#aff725', '#ef5350'],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: { // unica coisa que funcionou 
+                                label: function (context) {
+                                    return context.label + ":" + context.raw + "%"
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }, 0)
+
+
+    }
+
+
+        function contarAcertosPorUsuario(resposta) {
+
+        //Destroi Grafico
+        if (chartContarAcertosPorUsuario) {
+            chartContarAcertosPorUsuario.destroy()
+        }
+
+        if (!resposta || resposta.length === 0) {
+            return
+        }
+        const labels = resposta.map(item => item.usuario || item.nome || 'Usuario ${item.id}')
+        const valores = resposta.map(item => item.quantidadeAcertos || item.acertos || 0 )
+
+        const divGrafico = document.getElementById('divAcertosPorUsuario')
+
+        if(!divGrafico){
+            console.log("Div para acertos por usuario nn encontrada");
+            return
+        }
+
+        
+        setTimeout(() => {
+            
+            divGrafico.innerHTML = '<canvas id="acertos_por_usuario"></canvas>'
+
+            const ctx = document.getElementById('acertos_por_usuario').getContext('2d')
+
+            chartContarAcertosPorUsuario = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Acertos por usuario",
+                        data: valores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0
+                            }   
+                    },
+                    y: {
+                        ticks: {
+                            autoSkip: false
+                        }
+                    }
+                 }
+             }
+            })
+        }, 10)
+    
+    }
+
+
+
+    function totalParticipantes(resposta){
+            if(!resposta || resposta.length == 0){
+                console.warn("0 dados de participantes recebidos")
+            return
+            }
+    
+
+        const total = resposta[0].total || resposta[0]["Total Usuarios"]
+        document.querySelector('.card-kpis:nth-child(3) .total_participantes').textContent = total
     }
 
 
@@ -180,8 +477,11 @@
 
 
 
-    /*
+
+    
+
     // Alternar entre botoes ativos
+
     function setActiveButton(activeButton) {
         document.querySelectorAll('.button-chart').forEach(btn => {
             btn.classList.remove('active')
@@ -189,9 +489,12 @@
         activeButton.classList.add('active')
     }
 
+
     // Graficos de Acertos Por Tópicos
     function exibirAcertosPorTopico(event, dados) {
         setActiveButton(event.target)
+        divPreferenciasMusicais.style.display = "none";
+
         document.getElementById('divAcertosTopico').classList.remove('display-none')
         document.getElementById('divAcertosTopico').classList.add('display-block')
 
@@ -200,72 +503,81 @@
 
         document.getElementById('divProgressoAprendizado').classList.remove('display-block')
         document.getElementById('divProgressoAprendizado').classList.add('display-none')
+    }
 
-
-
-       /* const ctx = document.getElementById('acertos_topico').getContext('2d')
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dados.map(item => item.topico),
-                datasets: [{
-                    label: 'Taxa de Acertos (%)',
-                    data: dados.map(item => item.acertos),
-                    backgroundColor: '#7b1fa2'
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            }
-        }) */
-
-        /*plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico) */
-    //}  
- /*
-    // Função plotar Grafico Preferencias
-    function exibirPreferenciasMusicais (event) {
+    // Função Grafico Preferencias Musicais
+    function exibirPreferenciasMusicais(event) {
         setActiveButton(event.target)
-
+        divPreferenciasMusicais.style.display = "flex";
 
         document.getElementById('divAcertosTopico').classList.add('display-none')
         document.getElementById('divPreferenciasMusicais').classList.remove('display-none')
         document.getElementById('divPreferenciasMusicais').classList.add('display-block')
         document.getElementById('divProgressoAprendizado').classList.add('display-none')
 
-
-
-       /* const ctx = document.getElementById('preferencias_musicais').getContext('2d')
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: dados.map(item => item.genero),
-                datasets: [{
-                    label: 'Preferências (%)',
-                    data: dados.map(item => item.preferencia),
-                    backgroundColor: [
-                        '#42a5f5', '#ab47bc', '#26a69a', '#aff725', '#ef5350'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        })
-        plotarGraficoPreferenciasMusicais(dadosSimulados.preferenciasMusicais)
     }
+
+
+
+    /*function graficoLinha(){
+
+        const ctx = document.getElementById('progresso_aprendizado').getContext('2d')
+         new Chart(ctx, {
+             type: 'line',
+             data: {
+                 labels: dados.map(item => item.semana),
+                 datasets: [{
+                     label: 'Taxa de Aprendizado (%)',
+                     data: dados.map(item => item.taxa),
+                     borderColor: '#43a047',
+                     backgroundColor: 'rgba(67, 160, 71, 0.2)',
+                     fill: true,
+                     tension: 0.4
+                 }]
+             },
+             options: {
+                 responsive: true,
+                 scales: {
+                     y: {
+                         beginAtZero: true,
+                         max: 100
+                     }
+                 }
+             }
+         })
+    }*/
+
+
+
+
+
+
+    /* const ctx = document.getElementById('preferencias_musicais').getContext('2d')
+     new Chart(ctx, {
+         type: 'pie',
+         data: {
+             labels: dados.map(item => item.genero),
+             datasets: [{
+                 label: 'Preferências (%)',
+                 data: dados.map(item => item.preferencia),
+                 backgroundColor: [
+                     '#42a5f5', '#ab47bc', '#26a69a', '#aff725', '#ef5350'
+                 ]
+             }]
+         },
+         options: {
+             responsive: true
+         }
+     })*/
+    //plotarGraficoPreferenciasMusicais(dadosSimulados.preferenciasMusicais)
 
 
     // Função Plotar Progresso de Aprendizado 
     function exibirProgressoAprendizado(event, dados) {
         setActiveButton(event.target)
+        divPreferenciasMusicais.style.display = "none";
 
-        
+
         document.getElementById('divAcertosTopico').classList.add('display-none')
         document.getElementById('divPreferenciasMusicais').classList.add('display-none')
         document.getElementById('divProgressoAprendizado').classList.remove('display-none')
@@ -273,65 +585,143 @@
 
 
 
-        const ctx = document.getElementById('progresso_aprendizado').getContext('2d')
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: dados.map(item => item.semana),
-                datasets: [{
-                    label: 'Taxa de Aprendizado (%)',
-                    data: dados.map(item => item.taxa),
-                    borderColor: '#43a047',
-                    backgroundColor: 'rgba(67, 160, 71, 0.2)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            }
-        })
-            
-      //  exibirProgressoAprendizado(dadosSimulados.progress)
-    }*/
+        /* const ctx = document.getElementById('progresso_aprendizado').getContext('2d')
+         new Chart(ctx, {
+             type: 'line',
+             data: {
+                 labels: dados.map(item => item.semana),
+                 datasets: [{
+                     label: 'Taxa de Aprendizado (%)',
+                     data: dados.map(item => item.taxa),
+                     borderColor: '#43a047',
+                     backgroundColor: 'rgba(67, 160, 71, 0.2)',
+                     fill: true,
+                     tension: 0.4
+                 }]
+             },
+             options: {
+                 responsive: true,
+                 scales: {
+                     y: {
+                         beginAtZero: true,
+                         max: 100
+                     }
+                 }
+             }
+         })
+             */
+        //  exibirProgressoAprendizado(dadosSimulados.progress)
+    }
 
-function obterDadosGrafico() {
+
+    // Configuração do gráfico
+    /* const config = {
+         type: 'bar',
+         data: {
+             labels: labels,
+             datasets: [{
+                 label: 'Quantidade de Erros',
+                 data: valores,
+                 backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                 borderColor: 'rgba(75, 192, 192, 1)',
+                 borderWidth: 1
+             }]
+         },
+         options: {
+             responsive: true,
+             scales: {
+                 y: {
+                     beginAtZero: true,
+                     ticks: {
+                         precision: 0 // Para mostrar apenas números inteiros
+                     }
+                 }
+             }
+         }
+     }; */
+
+    /* // Criar e armazenar a instância do gráfico
+     chartAcertosTopico = new Chart(
+         document.getElementById('acertos_topico'),
+         config
+     );*/
+
+
+
+
+    /* const ctx = document.getElementById('acertos_topico').getContext('2d')
+   new Chart(ctx, {
+       type: 'bar',
+       data: {
+           labels: dados.map(item => item.topico),
+           datasets: [{
+               label: 'Taxa de Acertos (%)',
+               data: dados.map(item => item.acertos),
+               backgroundColor: '#7b1fa2'
+           }]
+       },
+       options: {
+           responsive: true,
+           scales: {
+               y: {
+                   beginAtZero: true,
+                   max: 100
+               }
+           }
+       }
+   }) */
+
+    /*plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico) */
+    //}  
+
+
+
+
+
+
+
+
+    /*
+         // Função chamada ao carregar a página para obter e processar os dados
+        function obterDados() {
     
+            document.querySelector('.taxa_acertos').textContent = "75%"
+            document.querySelector('.tempo_medio').textContent = "45s"
+            document.querySelector('.total_participantes').textContent = "128"
     
-
-    fetch(`/quiz/erradas`, { cache: 'no-store' }).then(function (response) {
-        if (response.ok) {
-            response.json().then(function (resposta) {
-                console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                
-                if(!resposta ||  resposta.length === 0){
-                    console.warn("Nenhum dado Recebido")
-                    return;
-                }
-
-                resposta.reverse()    //mais recente pro mais antigo 
-
-                erradas(resposta)
-            });
-        } else {
-            console.error('Nenhum dado encontrado ou erro na API');
+            plotarGraficoAcertosPorTopico(dadosSimulados.acertosPorTopico)
+             // Aqui seria a função que obteria os dados do banco de dados
+             // No caso, aqui você colocaria o fetch que teria o endereço da sua rota que você criou na pasta /routes e chamaria a função plotarGraficoLinha nessa função. Exemplo:
+     
+              fetch('/obterDados')
+              .then(function(response){
+                return response.json();
+              })
+              .then(function(data){
+                plotarGraficoLinha(data);
+                plotarGraficoBarra(data);
+              })
+              .catch(function(err){
+                console.log(err);
+              })
+     
+    
+             // Chamando a função para plotar o gráfico de linha com os dados
+             plotarGraficoLinha(dados);
+             // Chamando a função para plotar o gráfico de barra com os dados
+             plotarGraficoBarra(dados)
         }
-    })
-        .catch(function (error) {
-            console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-        });   
-        }
     
-    
-    
-    
-    
+        */
+
+
+
+
+
+
+
+
+
     /* fetch(`/quiz/erradas`, { cache: 'no-store' })
         .then(function (response) {
             if (response.ok) {
@@ -351,164 +741,58 @@ function obterDadosGrafico() {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
     }*/
-    
-   /* function erradas(resposta) {
 
-        console.log('iniciando plotagem do gráfico...');
-
-        // Criando estrutura para plotar gráfico - labels
-        let labels = [];
-
-        // Criando estrutura para plotar gráfico - dados
-        let dados = {
-            labels: labels,
-            datasets: [{
-                label: '',
-                data: [],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            }]
-        };
-
-        console.log('----------------------------------------------')
-        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
-        console.log(resposta)
-
-        // Inserindo valores recebidos em estrutura para plotar o gráfico
-        for (i = 0; i < resposta.length; i++) {
-            var registro = resposta[i];
-            labels.push(registro.nome);
-            dados.datasets[0].data.push(registro.quantidade);
-        }
-
-        console.log('----------------------------------------------')
-        console.log('O gráfico será plotado com os respectivos valores:')
-        console.log('Labels:')
-        console.log(labels)
-        console.log('Dados:')
-        console.log(dados.datasets)
-        console.log('----------------------------------------------')
-
-        // Criando estrutura para plotar gráfico - config
-        const config = {
-            type: 'bar',
-            data: dados,
-        };
-
-        // Adicionando gráfico criado em div na tela
-        let myChart = new Chart(
-            document.getElementById(`acertos_topico`),
-            config
-        );
-
-        }*/
-
-
-        //chatgpt
-
-       function erradas(resposta) {
-    console.log('iniciando plotagem do gráfico...');
-
-    // Destruir gráfico anterior se existir
-    if (chartAcertosTopico) {
-        chartAcertosTopico.destroy();
-    }
-    // Vê se tem dados
-    if(!resposta || resposta.length === 0){
-        console.log("Nenhum dado recebido");
-        return
-    }
-
-/*    const labels = [];
-    const valores = [];*/
-
-    // Prepara arrays para labels e dados
-    const labels = resposta.map(item => item.nome)
-    const valores = resposta.map(item => item.quantidade)
-
-
-
-   /* // Processando os dados
-    for (let i = 0; i < resposta.length; i++) {
-        labels.push(resposta[i].nome);
-        valores.push(resposta[i].quantidade);
-    }*/
-
-
-    // Tornar a div visível (apenas uma vez)
-  /*  document.getElementById('divAcertosTopico').classList.remove('display-none');
-    document.getElementById('divAcertosTopico').classList.add('display-block');*/
-
-    const divGrafico = document.getElementById('divAcertosTopico')
-
-
-    setTimeout(() => {
-        divGrafico.innerHTML = '<canvas id="acertos_topico"></canvas>'   // Recria se necessario    
-
-    const ctx = document.getElementById('acertos_topico').getContext('2d')
-
-       chartAcertosTopico = new Chart( ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Quantidade de Erros",
-                data: valores,
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                        precision: 0
-                    }
-                }
-            }
-        }
-       }) 
-    }, 10)
-    
+    /* function erradas(resposta) {
  
-
-    // Configuração do gráfico
-   /* const config = {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Quantidade de Erros',
-                data: valores,
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0 // Para mostrar apenas números inteiros
-                    }
-                }
-            }
-        }
-    }; */
-
-   /* // Criar e armazenar a instância do gráfico
-    chartAcertosTopico = new Chart(
-        document.getElementById('acertos_topico'),
-        config
-    );*/
-}
+         console.log('iniciando plotagem do gráfico...');
+ 
+         // Criando estrutura para plotar gráfico - labels
+         let labels = [];
+ 
+         // Criando estrutura para plotar gráfico - dados
+         let dados = {
+             labels: labels,
+             datasets: [{
+                 label: '',
+                 data: [],
+                 fill: false,
+                 borderColor: 'rgb(75, 192, 192)',
+                 tension: 0.1
+             }]
+         };
+ 
+         console.log('----------------------------------------------')
+         console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+         console.log(resposta)
+ 
+         // Inserindo valores recebidos em estrutura para plotar o gráfico
+         for (i = 0; i < resposta.length; i++) {
+             var registro = resposta[i];
+             labels.push(registro.nome);
+             dados.datasets[0].data.push(registro.quantidade);
+         }
+ 
+         console.log('----------------------------------------------')
+         console.log('O gráfico será plotado com os respectivos valores:')
+         console.log('Labels:')
+         console.log(labels)
+         console.log('Dados:')
+         console.log(dados.datasets)
+         console.log('----------------------------------------------')
+ 
+         // Criando estrutura para plotar gráfico - config
+         const config = {
+             type: 'bar',
+             data: dados,
+         };
+ 
+         // Adicionando gráfico criado em div na tela
+         let myChart = new Chart(
+             document.getElementById(`acertos_topico`),
+             config
+         );
+ 
+         }*/
 
 </script>
 </script>

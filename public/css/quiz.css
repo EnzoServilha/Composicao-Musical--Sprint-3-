@@ -182,7 +182,7 @@ button:disabled   /*Quando botão tiver desativado !Essa cor!*/
     cursor: not-allowed;
     box-shadow: none;
 }
-.text-sucess-with-bg{
+.text-success-with-bg{
     background-color: #c8f9bc;
 
 }

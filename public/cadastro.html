@@ -50,6 +50,21 @@
                     <input id="confirmacao_senha_input" type="password" placeholder="*******" />
                 </div>
 
+                <div class="campo">
+                    <span>Escolha seu Gênero Musical Favorito</span>
+                    <select id="ipt_genero">
+                        <option value="">Selecione</option>
+                        <option value="Rock">Rock</option>
+                        <option value="Pop">Pop</option>
+                        <option value="Eletrônica">Eletrônica</option>
+                        <option value="Classico">Classico</option>
+                        <option value="Sertanejo">Sertanejo</option>
+                        <option value="Rap">Rap</option>
+                        <option value="Trap">Trap</option>
+                    </select>
+                </div>
+
+
                 <div class="acao">
                     <a href="login.html">Já tem cadastro? Entrar</a>
                     <button onclick="cadastrar()" class="botao_cadastro_login">Registrar-se</button>
@@ -75,7 +90,7 @@
         var nomeVar = nome_input.value;
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
-
+        var generoVar = ipt_genero.value;
 
 
         //var idEmpresaVincular = 1
@@ -85,8 +100,8 @@
         if (
             nomeVar == "" ||
             emailVar == "" ||
-            senhaVar == ""
-
+            senhaVar == "" ||
+            generoVar == ""
         ) {
             cardErro.style.display = "block";
             mensagem_erro.innerHTML =
@@ -110,7 +125,8 @@
                 // Agora vá para o arquivo routes/usuario.js
                 nomeServer: nomeVar,
                 emailServer: emailVar,
-                senhaServer: senhaVar
+                senhaServer: senhaVar,
+                generoServer: generoVar
                 
             }),
         })

@@ -22,7 +22,7 @@ function autenticar(req, res) {
 
                         
                                     res.json({
-                                        id: resultadoAutenticar[0].id,
+                                        idUsuarios: resultadoAutenticar[0].idUsuarios,
                                         email: resultadoAutenticar[0].email,
                                         nome: resultadoAutenticar[0].nome,
                                         senha: resultadoAutenticar[0].senha
@@ -48,22 +48,38 @@ function autenticar(req, res) {
 
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
+    console.log("Dados RECEBIDOS:", req.body);
+
+    
+    
     var nome = req.body.nomeServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
-
+    var generoPreferido = req.body.generoServer
 
     // Faça as validações dos valores
-    if (nome == undefined) {
+  /*  if (nome == undefined) {
         res.status(400).send("Seu nome está undefined!");
     } else if (email == undefined) {
         res.status(400).send("Seu email está undefined!");
     } else if (senha == undefined) {
         res.status(400).send("Sua senha está undefined!");
-    } else {
+    } else if(generoPreferido == undefined){
+        res.status(400).send("Seu Genero Preferido está undefined!");
+        }*/
+        if (!nome ) {
+        res.status(400).send("Seu nome está undefined!");
+    } else if (!email) {
+        res.status(400).send("Seu email está undefined!");
+    } else if (!senha) {
+        res.status(400).send("Sua senha está undefined!");
+    } else if(!generoPreferido){
+        res.status(400).send("Seu Genero Preferido está undefined!");
+        }
+     else {
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha)
+        usuarioModel.cadastrar(nome, email, senha, generoPreferido)
             .then(
                 function (resultado) {
                     res.json(resultado);

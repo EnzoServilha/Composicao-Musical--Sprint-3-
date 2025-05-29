@@ -263,6 +263,7 @@
     function avancar() {
         if(btnProx.disabled){
             alert("Você precisa selecionar uma resposta antes de clicar em avançar")
+            return
         }
         btnProx.disabled = true
         
@@ -289,6 +290,9 @@
 
         let alternativaCorreta = null 
 
+        const mensagem_erro = document.getElementById("mensagem_erro")
+
+
         options.forEach((option) => {
             if (option.value === respostaQuestaoAtual) {
                 alternativaCorreta = option.nextElementSibling  //pega o span irmao do input
@@ -299,9 +303,11 @@
             const label = option.nextElementSibling  
 
             if (option.checked  && option.value === respostaQuestaoAtual) {
-                label.classList.add("text-sucess-with-bg")
+                label.classList.add("text-success-with-bg")
                 pontuacaoFinal++
-                certas++        
+
+                certas++                //adiciona mais um no total certas
+
                 const resposta = 1
                 fetch("/quiz/questoes", {
                       method: "POST",
@@ -321,7 +327,7 @@
 
                                 } else {
                                     return res.text().then(texto => {
-                                        cardErro.style.display = "block";
+                                        
                                         mensagem_erro.innerHTML = texto;
                                         setTimeout(sumirMensagem, 5000);
                                     });
@@ -329,7 +335,7 @@
                             })
                             .catch(erro => {
                                 console.error("Erro no cadastro:", erro);
-                                cardErro.style.display = "block";
+                              
                                 mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
                                 setTimeout(sumirMensagem, 5000);
                             });
@@ -341,7 +347,9 @@
             } else if (option.checked && option.value !== respostaQuestaoAtual) {
                 label.classList.add("text-error-with-bg")
                 alternativaCorreta.classList.add("text-sucess-with-bg")
-                erradas++
+
+                erradas++                   // adiciona mais um no total erradas
+
                 const resposta = 0
                 
                 fetch("/quiz/questoes", {
@@ -362,7 +370,7 @@
 
                                 } else {
                                     return res.text().then(texto => {
-                                        cardErro.style.display = "block";
+                                        
                                         mensagem_erro.innerHTML = texto;
                                         setTimeout(sumirMensagem, 5000);
                                     });
@@ -370,7 +378,7 @@
                             })
                             .catch(erro => {
                                 console.error("Erro no cadastro:", erro);
-                                cardErro.style.display = "block";
+                                
                                 mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
                                 setTimeout(sumirMensagem, 5000);
                             });
@@ -380,6 +388,62 @@
         document.getElementById('spanCertas').innerText = certas
         document.getElementById('spanErradas').innerText = erradas
     }
+
+
+
+
+
+
+
+
+
+
+
+    // chatgpt abaixo teste
+
+
+function enviarRespostaParaServidor(acertou) {
+
+    var idUsuario = sessionStorage.ID_USUARIO;
+    // Prepara os dados para enviar ao servidor
+    const dados = {
+        idUsuarios: idUsuarios, // Pega ID do usuário logado
+        fkQuiz: numeroDaQuestaoAtual + 1, // Número da questão
+        respostaCerta: acertou ? 1 : 0 // 1 se acertou, 0 se errou
+    };
+
+    // Envia para a rota /quiz/questoes no servidor
+    fetch("/quiz/questoes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados) // Converte para JSON
+    })
+    .then(res => {
+        if (res.ok) {
+            console.log("Resposta salva no banco de dados");
+        } else {
+            console.error("Erro ao salvar resposta");
+        }
+    })
+    .catch(err => console.error("Erro de conexão:", err));
+}
+
+
+
+// termino teste 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function limparCoresBackgroundOpcoes() {
         const labels = [
@@ -416,7 +480,7 @@
         //Esconder se quiser
         document.getElementById('jogo').style.display = "none"
 
-        window.location = "dashboard.html";
+        window.location =   "dashboard.html";
     }
 
     

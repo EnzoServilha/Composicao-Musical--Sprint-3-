@@ -15,7 +15,8 @@ create table usuarios(
 idUsuarios 	int primary key auto_increment,
 nome	varchar(45),
 email	varchar(45),
-senha	varchar(45)
+senha	varchar(45),
+generoPreferido varchar(50)
 );
 
 create table quiz(

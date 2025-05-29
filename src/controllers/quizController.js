@@ -2,9 +2,17 @@ var quizModel = require("../models/quizModel");
 
     function questoes(req, res){
        
-         var idUsuarios = req.body.idUsuarios
-        var fkQuiz = req.body.fkQuiz
-        var respostaCerta = req.body.respostaCerta
+         var idUsuarios = parseInt(req.body.idUsuarios)
+        var fkQuiz = parseInt(req.body.fkQuiz)
+        var respostaCerta = parseInt(req.body.respostaCerta)
+
+        console.log("DADOS RECEBIDOS:", req.body);
+
+        if(isNaN(idUsuarios) || isNaN(fkQuiz) || isNaN(respostaCerta)){
+            return res.status(400).json({
+                erro: "Campo invalido ou faltando idUsuarios, fkQUiz, respostaCerta"
+            })
+        }
 
         quizModel.questoes(idUsuarios, fkQuiz, respostaCerta)
         .then(() => {
@@ -16,7 +24,9 @@ var quizModel = require("../models/quizModel");
             console.error("Erro ao registrar resposta:", erro);
             res.status(500).json(erro.sqlMessage || erro);
         })
+        
     } 
+
 
     function certas(req, res){
         
@@ -34,6 +44,7 @@ var quizModel = require("../models/quizModel");
         });
     }
     
+
     function erradas(req, res){
         quizModel.erradas()
 
@@ -50,10 +61,72 @@ var quizModel = require("../models/quizModel");
     }
 
 
+    function preferenciasMusicais(req, res){
+        quizModel.preferenciasMusicais()
+
+        .then(function (resultado) {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum resultado encontrado!");
+            }
+        }).catch(function (erro) {
+            console.log("ERRO ao buscar pontuação: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }
+
+
+
+    function contarAcertosPorUsuario(req, res){
+
+        const idUsuarios = req.params.id || req.query.id
+
+        if(!idUsuarios){
+            return res.status(400).json({erro: "ID do usuarionão fornecido"})
+        }
+
+        quizModel.contarAcertosPorUsuario(idUsuarios)
+
+        .then(function (resultado) {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum resultado encontrado!");
+            }
+        }).catch(function (erro) {
+            console.log("ERRO ao buscar pontuação: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+        
+    }
+
+
+    
+    function totalParticipantes(req, res){
+        quizModel.totalParticipantes()
+
+        .then(function (resultado) {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum resultado encontrado!");
+            }
+        }).catch(function (erro) {
+            console.log("ERRO ao buscar pontuação: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+    }
+
+
+
 
 
 module.exports = {
     questoes,
     certas,
-    erradas
+    erradas,
+    preferenciasMusicais,
+    contarAcertosPorUsuario,
+    totalParticipantes
 }
