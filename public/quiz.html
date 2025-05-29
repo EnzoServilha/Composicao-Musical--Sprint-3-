@@ -211,6 +211,7 @@
     limparCoresBackgroundOpcoes()
    }
 
+   let idTentativaAtual = Date.now()
     function iniciarQuiz() {
         document.getElementById('pontuacao').style.display = "flex"
         document.getElementById('jogo').style.display = "flex"
@@ -218,6 +219,7 @@
 
         preencherHTMLcomQuestaoAtual(0)
 
+        idTentativaAtual = Date.now()
         
         btnProx.disabled = true
         btnTentarNovamente.disabled = true
@@ -309,6 +311,8 @@
                 certas++                //adiciona mais um no total certas
 
                 const resposta = 1
+                const dia = Date.now()
+
                 fetch("/quiz/questoes", {
                       method: "POST",
                             headers: {
@@ -317,7 +321,8 @@
                             body: JSON.stringify({
                                 idUsuarios: Number(sessionStorage.ID_USUARIO),
                                 fkQuiz: numeroDaQuestaoAtual + 1,
-                                respostaCerta: resposta
+                                respostaCerta: resposta,
+                                idTentativa: idTentativaAtual
                             })
 
                         })
@@ -351,6 +356,7 @@
                 erradas++                   // adiciona mais um no total erradas
 
                 const resposta = 0
+                const dia = Date.now()
                 
                 fetch("/quiz/questoes", {
                       method: "POST",
@@ -360,7 +366,8 @@
                             body: JSON.stringify({
                                 idUsuarios: sessionStorage.ID_USUARIO,
                                 fkQuiz: numeroDaQuestaoAtual + 1,
-                                respostaCerta: resposta
+                                respostaCerta: resposta,
+                                idTentativa: idTentativaAtual
                             })
 
                         })
@@ -469,6 +476,8 @@ function enviarRespostaParaServidor(acertou) {
 
     function finalizarJogo() {
         alert("Você finalizou o quiz")
+
+        //contarAcertosPorUsuario()
         
         document.getElementById('pontuacaoFinal').style.display = "block"
         document.getElementById('spanPontuacaoFinal').innerText = pontuacaoFinal + ' acertos'

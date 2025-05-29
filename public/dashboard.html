@@ -39,42 +39,25 @@
                 <h1 class="titulo">Taxa de Acerto</h1>
 
                 <div class="descricao">
-                    <p class="taxa_acertos">85%</p>
+                    <p class="taxa_acertos" id="idTaxaAcertos">0%</p>
                 </div>
 
                 <div class="corCardAlerta" id="cardTaxaAcertos"></div>
             </div>
 
-             <div class="card-kpis">
-                <h1 class="titulo">Tempo Médio</h1> 
 
-                <div class="descricao">
-                    <p class="tempo_medio">45s</p> 
-                </div> 
-
-                <div class="corCardAlerta" id="cardTempoMedio"></div> 
-            </div> 
-
-
-            <div class="card-kpis">
+           <!----> <div class="card-kpis">
                 <h1 class="titulo">Participantes</h1>
-
                 <div class="descricao">
-                    <p class="total_participantes">0</p>
-                </div>
 
+                </div>
+                <p class="total_participantes">0</p> 
                 <div class="corCardAlerta" id="cardTotalParticipantes"></div>
+
             </div>
 
-            <div class="card-kpis">
-                <h1 class="titulo">Engajamento</h1>
 
-                <div class="descricao">
-                    <p class="total_participantes">72%</p> 
-                </div>
 
-                <div class="corCardAlerta" id="cardEngajamento"></div>
-            </div>
 
         </div>
 
@@ -122,6 +105,8 @@
     let chartPreferenciasMusicais;
     let chartProgressoAprendizado;
     let chartContarAcertosPorUsuario;
+    let idUsuarios = sessionStorage.ID_USUARIO
+    
 
     function obterDadosGrafico() {
         fetch(`/quiz/erradas`, { cache: 'no-store' }).then(function (response) {
@@ -172,17 +157,17 @@
 
 
             //Acertos por usuario
-              fetch(`/quiz/contarAcertosPorUsuario`, { cache: 'no-store' }).then(function (response) {
+              fetch(`/quiz/contarAcertosPorUsuario/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)} acertossss`);
 
                     if (!resposta || resposta.length === 0) {
                         console.warn("Nenhum dado Recebido")
                         return;
                     }
                     resposta.reverse()    //mais recente pro mais antigo 
-                    contarAcertosPorUsuario(resposta)
+                   idTaxaAcertos.innerHTML = `${resposta[0].Acertos}%`
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -219,15 +204,22 @@
     
     
 
-    //Referencia a tabela Desempenho 
+    //Referencia a tabela Desempenho A
      function questoes(idUsuarios, idQuiz, acertou ) {
+
+        if(!idTentativaAtual || isNaN(idTentativaAtual)){
+         idTentativaAtual = Date.now()
+        
+        }
+        
         fetch(`/quiz/questoes`, {  method: 'POST', headers: {
             'Content-Type': 'application/json'
         },
     body: JSON.stringify({
         idUsuarios: idUsuarios,
         fkQuiz: idQuiz,
-        respostaCerta: acertou ? 1 : 0
+        respostaCerta: acertou ? 1 : 0,
+        idTentativa: idTentativaAtual
     })})
         .then(function (response) {
             if (response.ok) {
@@ -373,7 +365,7 @@
                     datasets: [{
                         label: "Preferências Musicais dos Usuários",
                         data: valores,
-                        backgroundColor: ['#42a5f5', '#ab47bc', '#26a69a', '#aff725', '#ef5350'],
+                        backgroundColor: ['#42a5f5', '#ab47bc', '#26a69a', '#898989', '#ef5350', '#ffa500', '#505050'],
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     }]
@@ -425,7 +417,7 @@
             const ctx = document.getElementById('acertos_por_usuario').getContext('2d')
 
             chartContarAcertosPorUsuario = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
@@ -469,7 +461,7 @@
     
 
         const total = resposta[0].total || resposta[0]["Total Usuarios"]
-        document.querySelector('.card-kpis:nth-child(3) .total_participantes').textContent = total
+        document.querySelector(' .total_participantes').textContent = total
     }
 
 

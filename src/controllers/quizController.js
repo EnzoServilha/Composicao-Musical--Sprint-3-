@@ -5,6 +5,8 @@ var quizModel = require("../models/quizModel");
          var idUsuarios = parseInt(req.body.idUsuarios)
         var fkQuiz = parseInt(req.body.fkQuiz)
         var respostaCerta = parseInt(req.body.respostaCerta)
+        var idTentativa = parseInt(req.body.idTentativa)
+        
 
         console.log("DADOS RECEBIDOS:", req.body);
 
@@ -14,7 +16,7 @@ var quizModel = require("../models/quizModel");
             })
         }
 
-        quizModel.questoes(idUsuarios, fkQuiz, respostaCerta)
+        quizModel.questoes(idUsuarios, fkQuiz, respostaCerta, idTentativa)
         .then(() => {
             res.status(200).json({
                 mensagem: "Resposta registrada com sucesso!"

@@ -25,10 +25,11 @@ perguntas 	varchar(300)
 );
 
 create table desempenho (
+idDesempenho int,
 fkUsuarios 	int,
 fkQuiz		int,
 respostaCerta 	int,
-primary key (fkUsuarios, fkQuiz),
+primary key (idDesempenho ,fkUsuarios, fkQuiz),
 foreign key (fkUsuarios) references usuarios(idUsuarios),
 foreign key (fkQuiz) references quiz(idQuiz) 
   );

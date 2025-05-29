@@ -11,8 +11,6 @@ router.post('/questoes', function(req, res){
     quizController.questoes(req, res) })
 
 
-
-
 router.get('/certas', function(req, res){
     quizController.certas(req, res) })
 

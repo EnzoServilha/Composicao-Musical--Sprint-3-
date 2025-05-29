@@ -1,13 +1,13 @@
 var database = require("../database/config")
 
 console.log("Passou no desempenho");
-
-    function questoes(idUsuarios, fkQuiz, respostaCerta){
+    // Tabela Desempenho
+    function questoes(idUsuarios, fkQuiz, respostaCerta, idTentativa ){
         console.log("Passou no desempenho");
         
          var instrucao = `
-                        insert into desempenho(fkUsuarios, fkQuiz, respostaCerta) 
-                        values (${idUsuarios}, ${fkQuiz}, ${respostaCerta})`   ;
+                        insert into desempenho( idTentativa, fkUsuarios, fkQuiz, respostaCerta ) 
+                        values ( ${idTentativa}, ${idUsuarios}, ${fkQuiz}, ${respostaCerta} );`   ;
 
                         return database.executar(instrucao)                         
     }
@@ -37,6 +37,7 @@ console.log("Passou no desempenho");
                         return database.executar(instrucao)
     }
 
+    // Grafico Pizza
     function preferenciasMusicais(){
         var instrucao = `
             select generoPreferido as "GeneroPreferido", count(*) as "Quantidade"
@@ -47,15 +48,20 @@ console.log("Passou no desempenho");
         return database.executar(instrucao)
     }
 
+    // Conta acertos
     function contarAcertosPorUsuario(idUsuarios){
-        var instrucao = `
-            select count(*) as "Acertos" 
-            from desempenho
-            where respostaCerta = 1
-            and fkUsuarios = ?
-            ;
-        ` ;
-        return database.executar(instrucao, [idUsuarios])
+        var instrucao = 
+
+    `select truncate(sum(respostaCerta) / count(*) * 100, 2) as "Acertos"
+        from desempenho
+           where fkUsuarios = ${idUsuarios} and idTentativa = (
+            select max(idTentativa)
+                from desempenho
+                  where fkUsuarios = ${idUsuarios})
+
+        `;
+
+        return database.executar(instrucao)
     }
 
         function totalParticipantes(){
