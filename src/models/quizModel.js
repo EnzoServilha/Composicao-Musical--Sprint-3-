@@ -20,7 +20,7 @@ console.log("Passou no desempenho");
         inner join usuarios u on u.idUsuarios = d.fkUsuarios
         where d.idTentativa = ( select max(idTentativa)
         from desempenho
-        where fkUsuaios = d.fkUsuarios)
+        where fkUsuarios = d.fkUsuarios)
         group by u.nome
         order by "Quantidade" desc
         limit 10;

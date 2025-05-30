@@ -25,11 +25,6 @@
         </div>
     </nav>
 
-    <!-- Elemento canvas onde o gráfico de linha será desenhado
-    <canvas id="linha"></canvas>
-    <canvas id="barra"></canvas>
-    Elemento canvas onde o gráfico de barra será desenhado-->
-
 
     <div class="englobaTudo">
 
@@ -43,21 +38,30 @@
                 </div>
 
                 <div class="corCardAlerta" id="cardTaxaAcertos"></div>
+
             </div>
 
 
-           <!----> <div class="card-kpis">
+            <div class="card-kpis">
                 <h1 class="titulo">Participantes</h1>
                 <div class="descricao">
 
                 </div>
-                <p class="total_participantes">0</p> 
+                <p class="total_participantes">0</p>
                 <div class="corCardAlerta" id="cardTotalParticipantes"></div>
 
             </div>
 
+            <div class="card-kpis">
+                <h1 class="titulo">Seu Genero Preferido</h1>
 
+                <div class="descricao">
 
+                    <p id="genero_preferido"></p>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -69,10 +73,9 @@
             <button class="button-chart" onclick="exibirPreferenciasMusicais(event)">Preferencias Musicais </button>
             <button class="button-chart" onclick="exibirProgressoAprendizado(event)">Progresso Aprendizado </button>
         </div>
+
+
         <!-- Cards Kpi's-->
-
-
-
 
         <div class="graficos">
 
@@ -80,7 +83,7 @@
 
             </div>
 
-            
+
             <div id="divPreferenciasMusicais" class="display-none">
                 <canvas id="preferencias_musicais"></canvas>
             </div>
@@ -105,7 +108,7 @@
     let chartProgressoAprendizado;
     let chartContarAcertosPorUsuario;
     let idUsuarios = sessionStorage.ID_USUARIO
-    
+
 
     function obterDadosGrafico() {
         fetch(`/quiz/certas`, { cache: 'no-store' }).then(function (response) {
@@ -155,8 +158,24 @@
 
 
 
-            //Acertos por usuario
-              fetch(`/quiz/contarAcertosPorUsuario/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
+
+
+        fetch(`/usuarios/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+
+                    document.getElementById('genero_preferido').innerHTML = resposta.generoPreferido
+                })
+            }
+        });
+
+
+
+
+
+
+        //Acertos por usuario
+        fetch(`/quiz/contarAcertosPorUsuario/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)} acertossss`);
@@ -166,7 +185,7 @@
                         return;
                     }
                     resposta.reverse()    //mais recente pro mais antigo 
-                   idTaxaAcertos.innerHTML = `${resposta[0].Acertos}%`
+                    idTaxaAcertos.innerHTML = `${resposta[0].Acertos}%`
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -178,8 +197,8 @@
 
 
 
-            //Kpi Total Participantes
-            fetch(`/quiz/totalParticipantes`, { cache: 'no-store' }).then(function (response) {
+        //Kpi Total Participantes
+        fetch(`/quiz/totalParticipantes`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
@@ -200,44 +219,46 @@
             });
 
     }
-    
-    
+
+
 
     //Referencia a tabela Desempenho A
-     function questoes(idUsuarios, idQuiz, acertou ) {
+    function questoes(idUsuarios, idQuiz, acertou) {
 
-        if(!idTentativaAtual || isNaN(idTentativaAtual)){
-         idTentativaAtual = Date.now()
-        
+        if (!idTentativaAtual || isNaN(idTentativaAtual)) {
+            idTentativaAtual = Date.now()
+
         }
-        
-        fetch(`/quiz/questoes`, {  method: 'POST', headers: {
-            'Content-Type': 'application/json'
-        },
-    body: JSON.stringify({
-        idUsuarios: idUsuarios,
-        fkQuiz: idQuiz,
-        respostaCerta: acertou ? 1 : 0,
-        idTentativa: idTentativaAtual
-    })})
-        .then(function (response) {
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
 
-                    if (!resposta || resposta.length === 0) {
-                        console.warn("Nenhum dado Recebido")
-                        return;
-                    }
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
+        fetch(`/quiz/questoes`, {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                idUsuarios: idUsuarios,
+                fkQuiz: idQuiz,
+                respostaCerta: acertou ? 1 : 0,
+                idTentativa: idTentativaAtual
+            })
         })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                        if (!resposta || resposta.length === 0) {
+                            console.warn("Nenhum dado Recebido")
+                            return;
+                        }
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
-        }
+    }
 
 
 
@@ -299,25 +320,25 @@
                             ticks: {
                                 stepSize: 1,
                                 precision: 0
-                            }   
-                    },
-                    y: {
-                        ticks: {
-                            autoSkip: false
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                autoSkip: false
+                            }
                         }
                     }
-                 }
-             }
-                   /* responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                precision: 0*/
+                }
+                /* responsive: true,
+                 scales: {
+                     y: {
+                         beginAtZero: true,
+                         ticks: {
+                             stepSize: 1,
+                             precision: 0*/
             })
         }, 10)
-    
+
     }
 
 
@@ -388,7 +409,7 @@
     }
 
 
-        function contarAcertosPorUsuario(resposta) {
+    function contarAcertosPorUsuario(resposta) {
 
         //Destroi Grafico
         if (chartContarAcertosPorUsuario) {
@@ -399,18 +420,18 @@
             return
         }
         const labels = resposta.map(item => item.usuario || item.nome || 'Usuario ${item.id}')
-        const valores = resposta.map(item => item.quantidadeAcertos || item.acertos || 0 )
+        const valores = resposta.map(item => item.quantidadeAcertos || item.acertos || 0)
 
         const divGrafico = document.getElementById('divAcertosPorUsuario')
 
-        if(!divGrafico){
+        if (!divGrafico) {
             console.log("Div para acertos por usuario nn encontrada");
             return
         }
 
-        
+
         setTimeout(() => {
-            
+
             divGrafico.innerHTML = '<canvas id="acertos_por_usuario"></canvas>'
 
             const ctx = document.getElementById('acertos_por_usuario').getContext('2d')
@@ -436,28 +457,28 @@
                             ticks: {
                                 stepSize: 1,
                                 precision: 0
-                            }   
-                    },
-                    y: {
-                        ticks: {
-                            autoSkip: false
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                autoSkip: false
+                            }
                         }
                     }
-                 }
-             }
+                }
             })
         }, 10)
-    
+
     }
 
 
 
-    function totalParticipantes(resposta){
-            if(!resposta || resposta.length == 0){
-                console.warn("0 dados de participantes recebidos")
+    function totalParticipantes(resposta) {
+        if (!resposta || resposta.length == 0) {
+            console.warn("0 dados de participantes recebidos")
             return
-            }
-    
+        }
+
 
         const total = resposta[0].total || resposta[0]["Total Usuarios"]
         document.querySelector(' .total_participantes').textContent = total
@@ -469,7 +490,7 @@
 
 
 
-    
+
 
     // Alternar entre botoes ativos
 

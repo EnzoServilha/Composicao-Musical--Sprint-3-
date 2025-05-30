@@ -24,6 +24,8 @@ router.get('/preferenciasMusicais', function(req, res){
         quizController.preferenciasMusicais(req, res)})
 
 
+        
+
 router.get('/contarAcertosPorUsuario/:id', function(req, res){
                 quizController.contarAcertosPorUsuario(req,res)})
 

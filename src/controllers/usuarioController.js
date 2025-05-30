@@ -97,7 +97,17 @@ function cadastrar(req, res) {
     }
 }
 
+        function buscarGeneroPorId(req, res){
+
+            var idUsuarios = req.params.id
+            usuarioModel.buscarGeneroPorId(idUsuarios)
+            .then(resultado => res.json(resultado[0]))
+            .catch(erro => res.status(500).json(erro))
+
+        }
+
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    buscarGeneroPorId
 }

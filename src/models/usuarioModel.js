@@ -22,7 +22,15 @@ function cadastrar(nome, email, senha, generoPreferido) {
     return database.executar(instrucaoSql); 
 }
 
+    function buscarGeneroPorId(idUsuarios){
+        var instrucao = `
+            select generoPreferido from usuarios where idUsuarios = ${idUsuarios}
+        `
+        return database.executar(instrucao); 
+    }
+
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    buscarGeneroPorId
 };

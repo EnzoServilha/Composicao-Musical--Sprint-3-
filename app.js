@@ -21,6 +21,7 @@ var quizRoute = require("./src/routes/quizRoute")
 
 
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
