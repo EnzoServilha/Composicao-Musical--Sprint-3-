@@ -24,8 +24,6 @@ router.get('/preferenciasMusicais', function(req, res){
         quizController.preferenciasMusicais(req, res)})
 
 
-        
-
 router.get('/contarAcertosPorUsuario/:id', function(req, res){
                 quizController.contarAcertosPorUsuario(req,res)})
 
@@ -33,6 +31,9 @@ router.get('/contarAcertosPorUsuario/:id', function(req, res){
 router.get('/totalParticipantes', function(req, res){
         quizController.totalParticipantes(req,res)})
 
+router.get('/historicoDesempenho/:id', function(req, res){
+       quizController.historicoDesempenhoDoUsuario(req, res)
+})
 
     
     module.exports = router 

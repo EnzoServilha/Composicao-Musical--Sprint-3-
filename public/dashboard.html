@@ -159,7 +159,7 @@
 
 
 
-
+            // Identifica unicamente o genero Preferido do usuario pra Kpi
         fetch(`/usuarios/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
@@ -173,8 +173,32 @@
 
 
 
+        fetch(`/quiz/historicoDesempenho/${idUsuarios}`, { cache: 'no-store'})
+            .then(function (response){
+                if(response.ok){
+                    response.json().then(function(resposta){
+                        if(!resposta || resposta.length === 0){
+                            console.warn("Nenhum dado Recebido")
+                            return
+                        }
+                        progressoAprendizado(resposta)
+                    })
+                } else{
+                    console.error("Nenhum dado Encontrado ou erro na API");
+                    
+                }
+            })
+            .catch(function (error){
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`)
+            })
 
-        //Acertos por usuario
+
+
+
+
+
+
+        //Acertos por usuario GRAFICO
         fetch(`/quiz/contarAcertosPorUsuario/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
@@ -470,6 +494,65 @@
         }, 10)
 
     }
+
+
+
+
+    function progressoAprendizado(resposta){
+        
+        //Destroi Grafico
+        if (chartProgressoAprendizado) {
+            chartProgressoAprendizado.destroy()
+        }
+
+        if (!resposta || resposta.length === 0) {
+            return
+        }
+        const labels = resposta.map((item, idx ) => `Tentativa ${idx + 1}`)
+        const valores = resposta.map(item => item.TaxaAcerto)
+
+        const divGrafico = document.getElementById('divProgressoAprendizado')
+
+        setTimeout(() => {
+
+            divGrafico.innerHTML = '<canvas id="progresso_aprendizado"></canvas>'
+            const ctx = document.getElementById('progresso_aprendizado').getContext('2d')
+
+            chartProgressoAprendizado = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Histórico de Acertos",
+                        data: valores,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: '#43a047',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                            }
+                        }
+                    }
+                
+            })
+        }, 10)
+
+    }
+
+
+
+
+
+
+
 
 
 

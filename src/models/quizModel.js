@@ -76,6 +76,22 @@ console.log("Passou no desempenho");
             return database.executar(instrucao)
         }
 
+        function historicoDesempenhoDoUsuario(idUsuario){
+
+            var instrucao = `
+
+            select idTentativa, truncate(sum(respostaCerta) / count(*) * 100, 2) as "TaxaAcerto",
+            max(dia) as "Dia"
+            from desempenho 
+            where fkUsuarios = ${idUsuario}
+            group by idTentativa
+            order by Dia;
+            `
+
+
+            return database.executar(instrucao)
+        }
+
 
 
     module.exports = { //Exportar pro fetch
@@ -84,5 +100,6 @@ console.log("Passou no desempenho");
     erradas,
     preferenciasMusicais,
     contarAcertosPorUsuario,
-    totalParticipantes
+    totalParticipantes,
+    historicoDesempenhoDoUsuario
 }

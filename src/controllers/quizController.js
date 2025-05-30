@@ -82,10 +82,10 @@ var quizModel = require("../models/quizModel");
 
     function contarAcertosPorUsuario(req, res){
 
-        const idUsuarios = req.params.id || req.query.id
+        const idUsuarios = req.params.id 
 
         if(!idUsuarios){
-            return res.status(400).json({erro: "ID do usuarionão fornecido"})
+            return res.status(400).json({erro: "ID do usuario não encontrado"})
         }
 
         quizModel.contarAcertosPorUsuario(idUsuarios)
@@ -122,6 +122,16 @@ var quizModel = require("../models/quizModel");
 
 
 
+    function historicoDesempenhoDoUsuario(req, res){
+        var idUsuario = req.params.id
+        quizModel.historicoDesempenhoDoUsuario(idUsuario)
+        .then(resultado => res.json(resultado))
+        .catch(erro => res.status(500).json(erro))
+
+}
+
+
+
 
 
 module.exports = {
@@ -130,5 +140,6 @@ module.exports = {
     erradas,
     preferenciasMusicais,
     contarAcertosPorUsuario,
-    totalParticipantes
+    totalParticipantes,
+    historicoDesempenhoDoUsuario
 }
