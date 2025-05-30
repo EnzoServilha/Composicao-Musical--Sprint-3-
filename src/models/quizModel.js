@@ -14,13 +14,17 @@ console.log("Passou no desempenho");
 
     function certas(){
         var instrucao = `
-        select  u.nome as nome , COUNT(*) as quantidade from desempenho dp
-		inner join usuarios as u on u.idUsuarios = dp.fkUsuarios
-			where respostaCerta = 1
-				group by nome
-					order by quantidade desc
-						limit 10;
-                        `
+        select u.nome as "Nome",
+           sum(d.respostaCerta) as "Quantidade"
+        from desempenho d
+        inner join usuarios u on u.idUsuarios = d.fkUsuarios
+        where d.idTentativa = ( select max(idTentativa)
+        from desempenho
+        where fkUsuaios = d.fkUsuarios)
+        group by u.nome
+        order by "Quantidade" desc
+        limit 10;
+        `
                         return database.executar(instrucao)
     }
 

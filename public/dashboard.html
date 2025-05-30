@@ -75,7 +75,6 @@
 
 
         <div class="graficos">
-            
 
             <div id="divAcertosTopico" class="display-block">
 
@@ -109,7 +108,7 @@
     
 
     function obterDadosGrafico() {
-        fetch(`/quiz/erradas`, { cache: 'no-store' }).then(function (response) {
+        fetch(`/quiz/certas`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
@@ -119,7 +118,7 @@
                         return;
                     }
                     resposta.reverse()    //mais recente pro mais antigo 
-                    erradas(resposta)
+                    certas(resposta)
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -247,7 +246,7 @@
 
 
     //mudar dps pq não é erradas e sim certas
-    function erradas(resposta) {
+    function certas(resposta) {
 
         //Destroi Grafico
         if (chartAcertosTopico) {
@@ -257,8 +256,8 @@
         if (!resposta || resposta.length === 0) {
             return
         }
-        const labels = resposta.map(item => item.nome)
-        const valores = resposta.map(item => item.quantidade)
+        const labels = resposta.map(item => item.Nome)
+        const valores = resposta.map(item => item.Quantidade)
 
 
         /* // Processando os dados
