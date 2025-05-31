@@ -21,7 +21,7 @@ body{
     transition: background-color 0.2s;
     user-select: none;
     justify-content: center;
-    background-color: #676767;
+    background-color: #b9b9b9;
 
 } 
 .botaoOpcao input[type="radio"]{ /*esconde input e ainda fica clicavel*/
@@ -30,31 +30,12 @@ body{
     position: absolute;
 
 }
-/*
-.botaoOpcao input[type="radio"]:checked + .option{ /*quando o radio fica checked, muda o estilo do label
-    background-color: #d4edda;
-    color: #155724;
-    font-weight: bold;
-    border-radius: 4px;
-    padding: 4px 8px;
-
-} */
-
-/*
-.botaoOpcao input[type="radio"]:checked + span{
-    background-color: #d4edda;
-    color: #155724
-}*/
 
 .botaoOpcao input{
     margin-right: 10px;
 
  } 
- /*
-.botaoOpcao:hover{
-    background-color: #ffffff;
-}
-*/
+
 #pontuacaoEJogo{
 flex: 1;
 display: flex;
@@ -95,7 +76,7 @@ min-height: 90vh;
 }
 
 #pontuacao span{
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 #jogo{
     display: flex;
@@ -109,8 +90,8 @@ min-height: 90vh;
     font-weight: 600;
     margin: 15px 0;
     line-height: 1.4;
-    color: #000000;
-    border-bottom: 2px solid #000000;
+    color: #ffffff;
+    
 }
 
 #infoAlternativas{
@@ -198,6 +179,10 @@ button:disabled   /*Quando botão tiver desativado !Essa cor!*/
 .flex-opcoes{
     display: flex;
     flex-direction: column;
+}
+.em{
+    font-style: normal;
+    color: white;
 }
 
 

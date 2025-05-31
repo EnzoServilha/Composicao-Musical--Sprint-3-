@@ -31,11 +31,12 @@ html, body {
     font-size: 1.25rem;
     line-height: 1.6;
     max-width: 800px;
+    font-weight: bold;
   }
 
   .banner-home span{
     color: #00bcd4;
-    font-weight: 'mont-serrat', sans-serif;
+    font-weight: bold;
 }
 
 
@@ -62,33 +63,38 @@ html, body {
   margin: auto;
 }
 
-
-.intro-home h2, .intro-home h3{
-color: #ccc;
+h2{
+  color: #00bcd4
 }
+
 
 .intro-home p{
 margin: 15px 0;
 line-height: 1.6;
-color: #bbb;
+color: #eee;
+font-size: 1.17em;
+font-weight: bold;
 }
 .intro-home ul{
   list-style: none;
   padding: 0;
   margin-top: 20px;
+  font-weight: bold;
+  font-size: 1.17em;
 }
 .intro-home ul li{
   margin: 10 0;
-  color: #aaf;
+  color: #eee;
   font-weight: 500;
+  font-size: 1.17em;
 }
 .cards-containers{
   display: flex;
   flex-wrap: nowrap;  /*Faz com que não quebre a linha*/
   justify-content: center; 
-  margin-top: 40px 0;
   gap: 32px;
 }
+
 .card{
   background-color: #1a1a1a;
   border-radius: 12px;
@@ -97,7 +103,14 @@ color: #bbb;
   min-width: 260px;
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
+  
 }
+.card a{
+  text-decoration: none;
+  color: inherit;
+
+}
+
 .card img{
   width: 60px;
   height: 60px;
@@ -106,10 +119,11 @@ color: #bbb;
 .card h4{
   color: #87cefa;
   margin-bottom: 10px;
+  font-size: 1.17em;
 }
 .card p{
   color: #ccc;
-  font-size: 14px;
+  font-size: 1.17em;
 }
 .card:hover{
   transform: translateY(-20px);
