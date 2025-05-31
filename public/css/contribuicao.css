@@ -62,6 +62,7 @@ h1{
     overflow: hidden;
     background-image: url('../assets/imgs/vista-traseira-publico-animado-com-os-bracos-levantados-torcendo-na-frente-palco-no-concerto-de-musica-copiar-espaco.jpg');
     background-size: cover;
+        opacity: 50%;
 }
 .banner img{
   width: 100%;

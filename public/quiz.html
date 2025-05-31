@@ -4,27 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exemplo - Quiz</title>
+    <title>Quiz</title>
     <link rel="stylesheet" href="./css/quiz.css">
+    <link rel="stylesheet" href="./css/navbar.css">
 </head>
 <body>
+          <nav class="navbar">
+        <div class="logo">Beneath The Notes</div>
+        <ul class="nav-links">
+            <li> <a href="index.html">Home</a> </li>
+            <li> <a href="beneficos.html">Beneficios</a> </li>
+            <li> <a href="contribuicao.html">Contribuição</a> </li>
+            <li> <a href="videos.html">Videos</a> </li>
+            <li> <a href="dashboard.html">Dashboard</a> </li>
+        </ul>
+        <div class="auth-links">
+            <a href="login.html" class="button-login">Login</a>
+            <a href="cadastro.html" class="button-cadastro">Cadastro</a>
+        </div>
+    </nav>
+
+
+
+
+
     <div id="pontuacaoEJogo">
         <button id="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
 
-        <div id="pontuacao" class="flex-colunar width-fit-content border-primary">
+        <div id="pontuacao" style="display:none" class="flex-colunar width-fit-content border-primary">
             <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
                 <span class="width-fit-content">Quantidade de acertos: <span id="spanCertas"></span></span>
                 <span class="width-fit-content">Quantidade de erros: <span id="spanErradas"></span></span>
             </div>
-            <div id="pontuacaoFinalJogo" class="flex-colunar padding-8">
-                <span id="pontuacaoFinal" class="width-fit-content">Pontuação Final:
-                    <span id="spanPontuacaoFinal">***</span>
-                </span>
-                <span id="msgFinal" class="width-fit-content">***</span>
-            </div>
         </div>
 
-        <div id="jogo" class="width-fit-content flex-colunar border-secondary">
+        <div id="jogo" style="display: none;" class="width-fit-content flex-colunar border-secondary">
 
             <div id="infoQuestao" class="padding-8">
                 <span>Questão atual: <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
@@ -70,7 +84,13 @@
 
         </div>
     </div>
-    
+
+    <div id="erro"></div>
+
+     <footer class="footer">
+        <p>Beneath The Notes - Enzo Servilha - 1CCOB - Todos os direitos reservados. </p>
+    </footer>
+
 </body>
 <script>
 
@@ -85,12 +105,12 @@
             pergunta: "O que é uma composição musical?",
             alternativaA: "Dança Coreografada",
             alternativaB: "Texto Literário ",
-            alternativaC: "Criação de músicas originaiss",
+            alternativaC: "Criação de músicas originais",
             alternativaD: "Tipo de instrumento",
             alternativaCorreta: "alternativaC"
         },
         {
-            pergunta: "Qual elemento musical é responsável pela ´linha melodica´ de uma música ?",
+            pergunta: "Qual elemento musical é responsável pela linha melodica de uma música ?",
             alternativaA: "Harmonia",
             alternativaB: "Ritmo",
             alternativaC: "Melodia",
@@ -98,7 +118,7 @@
             alternativaCorreta: "alternativaC"
         },
          {
-            pergunta: "Qual foi o primeiro instrumento musical inventado  ?",
+            pergunta: "Qual foi o primeiro instrumento musical inventado ?",
             alternativaA: "Tambor",
             alternativaB: "Lira",
             alternativaC: "Flauta de osso",
@@ -119,13 +139,13 @@
             pergunta: "Qual elemento NÃO é essencial em uma composição musical?",
             alternativaA: "Melodia",
             alternativaB: "Harmonia",
-            alternativaC: "TImbre",
+            alternativaC: "Timbre",
             alternativaD: "Letra",
             alternativaCorreta: "alternativaD"
         },
 
          {
-            pergunta: "O que é progressão harmõnica?",
+            pergunta: "O que é progressão harmônica?",
             alternativaA: "Uma sequência de acordes que dá suporte a melodia",
             alternativaB: "Tipo de ritmo musical",
             alternativaC: "Instrumento Musical",
@@ -141,7 +161,7 @@
             alternativaCorreta: "alternativaB"
         },
         {
-            pergunta: "Qual foi a banda a verder mais discos da história?",
+            pergunta: "Qual foi a banda a vender mais discos da história?",
             alternativaA: "The Rolling Stones",
             alternativaB: "The Beatles",
             alternativaC: "Queen",
@@ -151,35 +171,26 @@
 
     ]
 
-        let btnProx;
-        let btnTentarNovamente;
-        let btnIniciarQuiz;
-        let jogoContainer;
-        let spanNumeroAtual; 
-        let spanQtdQuestoes;
-        let spanqQuestao;
+        var btnProx;
+        var btnTentarNovamente;
+        
 
-        let primeiraOpcao;
-        let segundaOpcao;
-        let terceiraOpcao;
-        let quartaOpcao;
+        var primeiraOpcao;
+        var segundaOpcao;
+        var terceiraOpcao;
+        var quartaOpcao;
 
-        let numeroDaQuestaoAtual = 0
-        let quantidadeDeQuestoes = listaDeQuestoes.length
-        let pontuacaoFinal = 0
-        let certas = 0 
-        let erradas = 0 
+        var numeroDaQuestaoAtual = 0
+        var quantidadeDeQuestoes = listaDeQuestoes.length
+        var certas = 0 
+        var erradas = 0 
 
 
     window.onload = () => {
 
          btnProx = document.getElementById("btnProx");
          btnTentarNovamente = document.getElementById("btnTentarNovamente");
-         btnIniciarQuiz = document.getElementById("btnIniciarQuiz");
-         jogoContainer = document.getElementById("jogo");
-         spanNumeroAtual = document.getElementById("spanNumeroDaQuestaoAtual");
-         spanQtdQuestoes = document.getElementById("qtdQuestoes");
-         spanqQuestao = document.getElementById("spanQuestaoExibida");
+         
 
 
             primeiraOpcao = document.getElementById("primeiraOpcao");
@@ -192,9 +203,8 @@
     }
         
    function inicializar(){
-    spanQtdQuestoes.innerText = quantidadeDeQuestoes
-    document.getElementById('pontuacao').style.display = "none"
-    document.getElementById('jogo').style.display = "none"
+    document.getElementById("qtdQuestoes").innerText = quantidadeDeQuestoes
+    
 
     //Inativação Botões
     btnProx.disabled = true;
@@ -202,16 +212,17 @@
 
     //Reinicia Variaveis Globais se quiser
     numeroDaQuestaoAtual = 0
-    pontuacaoFinal = 0
     certas = 0
-    erradas = 0
+
 
     //Limpa o input na hora do clique e a cor 
     desmarcarRadioButtons()
     limparCoresBackgroundOpcoes()
    }
 
+
    let idTentativaAtual = Date.now()
+
     function iniciarQuiz() {
         document.getElementById('pontuacao').style.display = "flex"
         document.getElementById('jogo').style.display = "flex"
@@ -246,8 +257,6 @@
             return
         }
 
-        checarResposta()    //mostra certo e errado exatamente 
-        habilitarAlternativas(false)
         btnProx.disabled = false
 
     }
@@ -267,19 +276,28 @@
             alert("Você precisa selecionar uma resposta antes de clicar em avançar")
             return
         }
-        btnProx.disabled = true
+        checarResposta()
+
+        setTimeout(() => {
+            btnProx.disabled = true
+            desmarcarRadioButtons()
+            limparCoresBackgroundOpcoes()
+
+            if(numeroDaQuestaoAtual < quantidadeDeQuestoes - 1){
+                numeroDaQuestaoAtual++
+                preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
+            } else{
+                finalizarJogo()
+            }
+        }, 1000)
+    }
+
         
 
-        desmarcarRadioButtons()
-        limparCoresBackgroundOpcoes()
+       
 
-        if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
-            numeroDaQuestaoAtual++
-            preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
-        } else{
-            finalizarJogo()
-        }
-    }
+
+    
 
     function tentarNovamente() {
         window.location.reload()
@@ -292,7 +310,7 @@
 
         let alternativaCorreta = null 
 
-        const mensagem_erro = document.getElementById("mensagem_erro")
+        
 
 
         options.forEach((option) => {
@@ -306,12 +324,10 @@
 
             if (option.checked  && option.value === respostaQuestaoAtual) {
                 label.classList.add("text-success-with-bg")
-                pontuacaoFinal++
 
                 certas++                //adiciona mais um no total certas
 
                 const resposta = 1
-                const dia = Date.now()
 
                 fetch("/quiz/questoes", {
                       method: "POST",
@@ -333,8 +349,8 @@
                                 } else {
                                     return res.text().then(texto => {
                                         
-                                        mensagem_erro.innerHTML = texto;
-                                        setTimeout(sumirMensagem, 5000);
+                                        document.getElementById("erro").innerHTML = `Deu erro` 
+
                                     });
                                 }
                             })
@@ -351,12 +367,12 @@
                 
             } else if (option.checked && option.value !== respostaQuestaoAtual) {
                 label.classList.add("text-error-with-bg")
-                alternativaCorreta.classList.add("text-sucess-with-bg")
+                alternativaCorreta.classList.add("text-success-with-bg")
 
                 erradas++                   // adiciona mais um no total erradas
 
                 const resposta = 0
-                const dia = Date.now()
+                
                 
                 fetch("/quiz/questoes", {
                       method: "POST",
@@ -398,60 +414,6 @@
 
 
 
-
-
-
-
-
-
-
-
-    // chatgpt abaixo teste
-
-
-function enviarRespostaParaServidor(acertou) {
-
-    var idUsuario = sessionStorage.ID_USUARIO;
-    // Prepara os dados para enviar ao servidor
-    const dados = {
-        idUsuarios: idUsuarios, // Pega ID do usuário logado
-        fkQuiz: numeroDaQuestaoAtual + 1, // Número da questão
-        respostaCerta: acertou ? 1 : 0 // 1 se acertou, 0 se errou
-    };
-
-    // Envia para a rota /quiz/questoes no servidor
-    fetch("/quiz/questoes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados) // Converte para JSON
-    })
-    .then(res => {
-        if (res.ok) {
-            console.log("Resposta salva no banco de dados");
-        } else {
-            console.error("Erro ao salvar resposta");
-        }
-    })
-    .catch(err => console.error("Erro de conexão:", err));
-}
-
-
-
-// termino teste 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     function limparCoresBackgroundOpcoes() {
         const labels = [
             document.getElementById("labelOpcaoUm"),
@@ -462,7 +424,7 @@ function enviarRespostaParaServidor(acertou) {
         ]
         
             labels.forEach((label) => {
-                label.classList.remove("text-sucess-with-bg", "text-error-with-bg")
+                label.classList.remove("text-success-with-bg", "text-error-with-bg")
             } 
         )
     }
@@ -476,11 +438,6 @@ function enviarRespostaParaServidor(acertou) {
 
     function finalizarJogo() {
         alert("Você finalizou o quiz")
-
-        //contarAcertosPorUsuario()
-        
-        document.getElementById('pontuacaoFinal').style.display = "block"
-        document.getElementById('spanPontuacaoFinal').innerText = pontuacaoFinal + ' acertos'
         
         //Desativa botões dps de terminar
         btnProx.disabled = true
@@ -491,8 +448,6 @@ function enviarRespostaParaServidor(acertou) {
 
         window.location =   "dashboard.html";
     }
-
-    
 
 
 </script>

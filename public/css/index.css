@@ -84,10 +84,10 @@ color: #bbb;
 }
 .cards-containers{
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-top: 50px;
-  gap: 20px;
+  flex-wrap: nowrap;  /*Faz com que não quebre a linha*/
+  justify-content: center; 
+  margin-top: 40px 0;
+  gap: 32px;
 }
 .card{
   background-color: #1a1a1a;
