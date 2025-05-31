@@ -45,6 +45,26 @@ function autenticar(req, res) {
     }
 
 }
+function verificarEmail(req, res){
+    var email = req.body.emailServer
+    usuarioModel.verificarEmail(email)
+    .then((resultado) => {
+        if(resultado.length > 0){
+            res.status(409).send("Email já cadastrado")
+        } else{
+            console.log("email normal");
+            res.sendStatus(200)
+            
+        }
+    })
+    .catch((erro) => {
+        console.log("Erro verificacao email", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage)
+        
+    })
+
+
+}
 
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
@@ -57,16 +77,6 @@ function cadastrar(req, res) {
     var senha = req.body.senhaServer;
     var generoPreferido = req.body.generoServer
 
-    // Faça as validações dos valores
-  /*  if (nome == undefined) {
-        res.status(400).send("Seu nome está undefined!");
-    } else if (email == undefined) {
-        res.status(400).send("Seu email está undefined!");
-    } else if (senha == undefined) {
-        res.status(400).send("Sua senha está undefined!");
-    } else if(generoPreferido == undefined){
-        res.status(400).send("Seu Genero Preferido está undefined!");
-        }*/
         if (!nome ) {
         res.status(400).send("Seu nome está undefined!");
     } else if (!email) {
@@ -86,12 +96,20 @@ function cadastrar(req, res) {
                 }
             ).catch(
                 function (erro) {
+                    console.log("CODIGO DE ERRO:", erro.code);
+                    
+                    if(erro.code === "ER_DUP_ENTRY"){
+                        
+                       return res.status(409).send("Email já existente")
+                    } else{
+                        
                     console.log(erro);
                     console.log(
                         "\nHouve um erro ao realizar o cadastro! Erro: ",
                         erro.sqlMessage
                     );
-                    res.status(500).json(erro.sqlMessage);
+                    return res.status(500).json(erro.sqlMessage);
+                    }
                 }
             );
     }
@@ -109,5 +127,6 @@ function cadastrar(req, res) {
 module.exports = {
     autenticar,
     cadastrar,
-    buscarGeneroPorId
+    buscarGeneroPorId,
+    verificarEmail
 }

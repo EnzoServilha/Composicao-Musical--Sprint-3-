@@ -60,7 +60,7 @@ padding: 0 20px;
   font-size: 1.17em;
 }
 .intro-beneficios h2{
-  color: #87cefa;
+  color: #00bcd4;
   margin-top: 30px;
   
 }
@@ -108,4 +108,7 @@ padding: 0 20px;
   font-size: 14px;
   
 
+}
+.footer p{
+    color: white;
 }

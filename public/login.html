@@ -7,7 +7,6 @@
     <title>Login</title>
     <link rel="stylesheet" href="./css/navbar.css">
     <link rel="stylesheet" href="./css/cadastro_login.css">
-    <link rel="stylesheet" href="./css/estilo.css">
     <script src="js/sessao.js"></script>
 </head>
 
@@ -65,6 +64,13 @@
 <script>
 
 
+    function aguardar(){
+        document.getElementById("div_aguardar").style.display = "block"
+
+        setTimeout(() => {
+            document.getElementById("div_aguardar").style.display = "none"
+        }, 2000)
+    }
 
     function entrar() {
         aguardar();
@@ -79,7 +85,7 @@
             return false;
         }
         else {
-            setInterval(sumirMensagem, 5000)
+            setTimeout(sumirMensagem, 5000)
         }
 
         console.log("FORM LOGIN: ", emailVar);
@@ -133,6 +139,9 @@
 
     function sumirMensagem() {
         cardErro.style.display = "none"
+    }
+    window.onload = function (){
+        document.getElementById("div_aguardar").style.display = "none"
     }
 
 </script>

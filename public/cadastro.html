@@ -112,22 +112,27 @@
             mensagem_erro.innerHTML =
                 "(Mensagem de erro para todos os campos em branco)";
 
-            //finalizarAguardar();
             return false;
-        } else {
-            setTimeout(sumirMensagem, 5000);
+        } else if(senhaVar != confirmacao_senha_input.value){
+            cardErro.style.display = "block"
+            mensagem_erro.innerHTML =
+                "Senha diferente da confirmação de senha"
+            return false 
         }
-
-
-        // Enviando o valor da nova input
+        else if(!emailVar.includes("@") || !emailVar.includes(".")){
+            cardErro.style.display = "block"
+            mensagem_erro.innerHTML = "Email invalido, deve conter @ e ."
+            return false
+        }
+        else {
+            
+                // Enviando o valor das inputs
         fetch("/usuarios/cadastrar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                // crie um atributo que recebe o valor recuperado aqui
-                // Agora vá para o arquivo routes/usuario.js
+            body: JSON.stringify({  // envia os valores 
                 nomeServer: nomeVar,
                 emailServer: emailVar,
                 senhaServer: senhaVar,
@@ -135,53 +140,32 @@
                 
             }),
         })
-            .then(function (resposta) {
-                console.log("resposta: ", resposta);
 
-                if (resposta.ok) {
-                    cardErro.style.display = "block";
-
-                    mensagem_erro.innerHTML =
-                        "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
-
+            .then( res =>  {
+                if(res.ok){
+                    alert("Cadastro realizado com sucesso")
                     setTimeout(() => {
                         window.location = "login.html";
-                    }, "2000");
-
-                    limparFormulario();
-                    finalizarAguardar();
-                } else {
-                    throw "Houve um erro ao tentar realizar o cadastro!";
+                    }, "1000");
+                } else{
+                    return res.text().then (texto => {
+                        cardErro.style.display = "block"
+                        mensagem_erro.innerHTML = texto
+                        setTimeout(sumirMensagem, 5000)
+                    })
                 }
             })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-                 finalizarAguardar();
-            });
-
-        return false;
-    }
-
-    // Listando empresas cadastradas 
-   /* function listar() {
-        fetch("/empresas/listar", {
-            method: "GET",
-        })
-            .then(function (resposta) {
-                resposta.json().then((empresas) => {
-                    empresas.forEach((empresa) => {
-                        listaEmpresasCadastradas.push(empresa);
-
-                        console.log("listaEmpresasCadastradas")
-                        console.log(listaEmpresasCadastradas[0].codigo_ativacao)
-                    });
-                });
+            .catch(erro => {
+                console.error("Erro cadastro, erro")
+                cardErro.style.display = "block"
+                mensagem_erro.innerHTML = "Erro de conectar com o servidor"
+                setTimeout(sumirMensagem, 1000)
             })
-            .catch(function (resposta) {
-                console.log(`#ERRO: ${resposta}`);
-            });
-    }*/
+            return false
+            }
 
+        }
+    
     function sumirMensagem() {
         cardErro.style.display = "none";
     }
