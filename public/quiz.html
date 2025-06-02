@@ -274,7 +274,7 @@
     }
 
     function avancar() {
-        if (btnProx.disabled) { // se estiver destivado 
+        if (btnProx.disabled) { // se estiver desativado 
             alert("Você precisa selecionar uma resposta antes de clicar em avançar")
             return
         }
@@ -330,7 +330,7 @@
                     },
                     body: JSON.stringify({
                         idUsuarios: Number(sessionStorage.ID_USUARIO),
-                        fkQuiz: numeroDaQuestaoAtual + 1,
+                        fkQuiz: numeroDaQuestaoAtual + 1,   // começa do zero por isso mais um 
                         respostaCerta: resposta,
                         idTentativa: idTentativaAtual
                     })
@@ -452,10 +452,6 @@
 
 
 
-
-
-
-
     // Só limpa as cores percorrendo as labels e retirando quaisquer classes css
     function limparCoresBackgroundOpcoes() {
         const labels = [
@@ -466,7 +462,7 @@
 
         ]
 
-        labels.forEach((label) => {
+        labels.forEach((label) => { // Aplica pra todos os elementos. Nesse caso remove as classes 
             label.classList.remove("text-success-with-bg", "text-error-with-bg")
         }
         )

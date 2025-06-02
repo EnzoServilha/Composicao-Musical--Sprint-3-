@@ -45,6 +45,7 @@ var quizModel = require("../models/quizModel");
             res.status(500).json(erro.sqlMessage);
         });
     }
+    
 
     function preferenciasMusicais(req, res){
         quizModel.preferenciasMusicais()

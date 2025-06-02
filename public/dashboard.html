@@ -62,9 +62,6 @@
 
         </div>
 
-
-
-
         <div class="button-nav_dash">
             <button class="button-chart active" onclick="exibirAcertosPorTopico(event)">Últimos acertos dos Usuários
             </button>
@@ -78,9 +75,7 @@
         <div class="graficos">
 
             <div id="divAcertosTopico" class="display-block">
-
             </div>
-
 
             <div id="divPreferenciasMusicais" class="display-none">
                 <canvas id="preferencias_musicais"></canvas>
@@ -114,7 +109,6 @@
 
     // Busca os dados pra usar na dashboard
     function obterDadosGrafico() {
-
 
 
         // Gráfico Ultimos Acertos Dos usuários
@@ -561,8 +555,10 @@
     // Alternar entre botoes ativos
 
     function setActiveButton(activeButton) {
-        document.querySelectorAll('.button-chart').forEach(btn => {
-            btn.classList.remove('active')
+                        // pega a classe css que combina como uma lista
+                        // Exemplo, tudo que estiver com .button-chart vai ser removido, adicionado, muda com ou etc
+        document.querySelectorAll('.button-chart').forEach(btn => {   // Mexe em todos os botoes, opções
+            btn.classList.remove('active') // deixa inativo o botao
         })
         activeButton.classList.add('active')
     }
