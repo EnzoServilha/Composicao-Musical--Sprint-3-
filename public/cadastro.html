@@ -86,19 +86,14 @@
 </body>
 <script>
 
-   
-    function cadastrar() {
-        // aguardar();
 
-        //Recupere o valor da nova input pelo nome do id
-        // Agora vá para o método fetch logo abaixo
+    function cadastrar() {
+       
         var nomeVar = nome_input.value;
         var emailVar = email_input.value;
         var senhaVar = senha_input.value;
         var generoVar = ipt_genero.value;
 
-
-        //var idEmpresaVincular = 1
 
 
         // Verificando se há algum campo em branco
@@ -106,13 +101,13 @@
             nomeVar == "" ||
             emailVar == "" ||
             senhaVar == "" ||
-            generoVar == ""
-        ) {
+            generoVar == "" ) 
+            {
             cardErro.style.display = "block";
             mensagem_erro.innerHTML =
                 "(Mensagem de erro para todos os campos em branco)";
-
             return false;
+
         } else if(senhaVar != confirmacao_senha_input.value){
             cardErro.style.display = "block"
             mensagem_erro.innerHTML =
@@ -126,13 +121,13 @@
         }
         else {
             
-                // Enviando o valor das inputs
+                // O cadastro só envia pro banco as informações
         fetch("/usuarios/cadastrar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({  // envia os valores 
+            body: JSON.stringify({  // envia os valores em forma de json 
                 nomeServer: nomeVar,
                 emailServer: emailVar,
                 senhaServer: senhaVar,

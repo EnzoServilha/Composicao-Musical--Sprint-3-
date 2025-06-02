@@ -16,10 +16,6 @@ body{
     align-items: center;
     box-sizing: border-box;
 
-   /* justify-content: center;
-    min-height: 50vh;
-    font-size: medium;
-    width: 100%;*/
 }
 .iframe iframe{
     width: 100%;

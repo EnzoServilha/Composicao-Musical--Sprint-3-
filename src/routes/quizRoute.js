@@ -14,12 +14,6 @@ router.post('/questoes', function(req, res){
 router.get('/certas', function(req, res){
     quizController.certas(req, res) })
 
-
-    
-router.get('/erradas', function(req, res){
-    quizController.erradas(req, res) })
-
-
 router.get('/preferenciasMusicais', function(req, res){
         quizController.preferenciasMusicais(req, res)})
 

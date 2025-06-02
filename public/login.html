@@ -91,25 +91,25 @@
         console.log("FORM LOGIN: ", emailVar);
         console.log("FORM SENHA: ", senhaVar);
 
-        fetch("/usuarios/autenticar", {
+        fetch("/usuarios/autenticar", {     // Faz a requisição via endpoint post. Se o email e senha baterem no banco. Segue 
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
+            body: JSON.stringify({      // Converte as informações em Json  manda pro controller, passa pro model, verifica, e volta pro front com a respota
                 emailServer: emailVar,
                 senhaServer: senhaVar
             })
         }).then(function (resposta) {
             console.log("ESTOU NO THEN DO entrar()!")
 
-            if (resposta.ok) {
-                console.log(resposta);
+            if (resposta.ok) {      // Se estiver no banco segue
+                console.log(resposta); 
 
-                resposta.json().then(json => {
-                    console.log(json);
-                    console.log(JSON.stringify(json));
-                    sessionStorage.ID_USUARIO = json.idUsuarios;
+                resposta.json().then(json => { // Faz a resposta virar Json
+                    console.log(json);  
+                    console.log(JSON.stringify(json)); // Salva as informações dos usuarios na sessionStorage (Temporariamente)
+                    sessionStorage.ID_USUARIO = json.idUsuarios;    
                     sessionStorage.NOME_USUARIO = json.nome;
                     sessionStorage.EMAIL_USUARIO = json.email;
 
@@ -120,7 +120,7 @@
 
                 });
 
-            } else {
+            } else { // se não erro
 
                 console.log("Houve um erro ao tentar realizar o login!");
 

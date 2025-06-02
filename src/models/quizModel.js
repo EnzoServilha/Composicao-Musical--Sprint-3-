@@ -1,6 +1,7 @@
 var database = require("../database/config")
 
 console.log("Passou no desempenho");
+
     // Tabela Desempenho
     function questoes(idUsuarios, fkQuiz, respostaCerta, idTentativa ){
         console.log("Passou no desempenho");
@@ -28,19 +29,6 @@ console.log("Passou no desempenho");
                         return database.executar(instrucao)
     }
 
-
-    function erradas(){
-        var instrucao = `
-        select  u.nome as nome , COUNT(*) as quantidade from desempenho dp
-		inner join usuarios as u on u.idUsuarios = dp.fkUsuarios
-			where respostaCerta = 0
-				group by nome
-					order by quantidade desc
-						limit 10;
-                        `
-                        return database.executar(instrucao)
-    }
-
     // Grafico Pizza
     function preferenciasMusicais(){
         var instrucao = `
@@ -52,30 +40,35 @@ console.log("Passou no desempenho");
         return database.executar(instrucao)
     }
 
-    // Conta acertos
+    // Conta acertos 
     function contarAcertosPorUsuario(idUsuarios){
         var instrucao = 
 
-    `select truncate(sum(respostaCerta) / count(*) * 100, 2) as "Acertos"
+    `select u.nome as "nome", truncate(sum(respostaCerta) / count(*) * 100, 2) as "Acertos"
         from desempenho
+        inner join usuarios u on u.idUsuarios = desempenho.fkUsuarios
            where fkUsuarios = ${idUsuarios} and idTentativa = (
             select max(idTentativa)
                 from desempenho
                   where fkUsuarios = ${idUsuarios})
-
+                     group by u.nome, u.idUsuarios
         `;
 
         return database.executar(instrucao)
     }
 
+
+        // KPI
         function totalParticipantes(){
             var instrucao = `
-            select count(distinct idUsuarios) as "Total Usuarios"
+            select count(distinct idUsuarios) as "TotalUsuarios"
             from usuarios;
             ` 
             return database.executar(instrucao)
         }
 
+
+        // 3 grafico
         function historicoDesempenhoDoUsuario(idUsuario){
 
             var instrucao = `
@@ -97,7 +90,6 @@ console.log("Passou no desempenho");
     module.exports = { //Exportar pro fetch
     questoes,
     certas,
-    erradas,
     preferenciasMusicais,
     contarAcertosPorUsuario,
     totalParticipantes,

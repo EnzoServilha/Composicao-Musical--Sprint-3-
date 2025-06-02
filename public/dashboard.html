@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body onload="obterDadosGrafico()"> 
+<body onload="obterDadosGrafico()">
     <nav class="navbar">
         <div class="logo">Beneath The Notes</div>
         <ul class="nav-links">
@@ -56,8 +56,8 @@
             <div class="card-kpis">
                 <h1 class="titulo">Seu Genero Preferido</h1>
                 <div class="descricao"></div>
-                    <p id="genero_preferido"></p>
-                    <div class="corCardAlerta"></div>
+                <p id="genero_preferido"></p>
+                <div class="corCardAlerta"></div>
             </div>
 
         </div>
@@ -66,7 +66,8 @@
 
 
         <div class="button-nav_dash">
-            <button class="button-chart active" onclick="exibirAcertosPorTopico(event)">Últimos acertos dos Usuários </button>
+            <button class="button-chart active" onclick="exibirAcertosPorTopico(event)">Últimos acertos dos Usuários
+            </button>
             <button class="button-chart" onclick="exibirPreferenciasMusicais(event)">Preferencias Musicais </button>
             <button class="button-chart" onclick="exibirProgressoAprendizado(event)">Progresso Aprendizado </button>
         </div>
@@ -98,31 +99,36 @@
 
     </div>
 
-     <footer class="footer">
+    <footer class="footer">
         <p>Beneath The Notes - Enzo Servilha - 1CCOB - Todos os direitos reservados. </p>
     </footer>
 
 </body>
 <script>
-    let chartAcertosTopico;
-    let chartPreferenciasMusicais;
-    let chartProgressoAprendizado;
-    let chartContarAcertosPorUsuario;
+    // Começa null pra depois utilizar
+    let chartAcertosTopico = null
+    let chartPreferenciasMusicais = null
+    let chartProgressoAprendizado = null
+    let chartContarAcertosPorUsuario = null
     let idUsuarios = sessionStorage.ID_USUARIO
 
-
+    // Busca os dados pra usar na dashboard
     function obterDadosGrafico() {
+
+
+
+        // Gráfico Ultimos Acertos Dos usuários
         fetch(`/quiz/certas`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
-                response.json().then(function (resposta) {
+                response.json().then(function (resposta) { // Converte pra json
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
 
                     if (!resposta || resposta.length === 0) {
                         console.warn("Nenhum dado Recebido")
                         return;
                     }
-                    resposta.reverse()    //mais recente pro mais antigo 
-                    certas(resposta)
+                    resposta.reverse()    //dados do array mais recente pro mais antigo 
+                    certas(resposta)    // chama a função que vai montar o gráfico
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -136,10 +142,10 @@
 
 
 
-        // Preferencias Musicas
+        // Preferencias Musicas / Gráfico Pizza
         fetch(`/quiz/preferenciasMusicais`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
-                response.json().then(function (resposta) {
+                response.json().then(function (resposta) {  // converte pra json 
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
 
                     if (!resposta || resposta.length === 0) {
@@ -147,7 +153,7 @@
                         return;
                     }
                     resposta.reverse()    //mais recente pro mais antigo 
-                    preferenciasMusicais(resposta)
+                    preferenciasMusicais(resposta) // Manda as informações pra função que vai criar o grafico
                 });
             } else {
                 console.error('Nenhum dado encontrado ou erro na API');
@@ -160,10 +166,10 @@
 
 
 
-            // Identifica unicamente o genero Preferido do usuario pra Kpi
+        // Identifica unicamente o genero Preferido do usuario pra KPI
         fetch(`/usuarios/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
-                response.json().then(function (resposta) {
+                response.json().then(function (resposta) {  //converte pra json
 
                     document.getElementById('genero_preferido').innerHTML = resposta.generoPreferido
                 })
@@ -173,108 +179,42 @@
 
 
 
-
-        fetch(`/quiz/historicoDesempenho/${idUsuarios}`, { cache: 'no-store'})
-            .then(function (response){
-                if(response.ok){
-                    response.json().then(function(resposta){
-                        if(!resposta || resposta.length === 0){
+        // Grafico Progresso Aprendizado/histórico de desepenho 
+        fetch(`/quiz/historicoDesempenho/${idUsuarios}`, { cache: 'no-store' })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {    //converte pra json
+                        if (!resposta || resposta.length === 0) {
                             console.warn("Nenhum dado Recebido")
                             return
                         }
-                        progressoAprendizado(resposta)
+                        progressoAprendizado(resposta) // manda os dados pra função
                     })
-                } else{
+                } else {
                     console.error("Nenhum dado Encontrado ou erro na API");
-                    
+
                 }
             })
-            .catch(function (error){
+            .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`)
             })
 
 
 
-
-
-
-
-        //Acertos por usuario GRAFICO
-        fetch(`/quiz/contarAcertosPorUsuario/${idUsuarios}`, { cache: 'no-store' }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)} acertossss`);
-
-                    if (!resposta || resposta.length === 0) {
-                        console.warn("Nenhum dado Recebido")
-                        return;
-                    }
-                    resposta.reverse()    //mais recente pro mais antigo 
-                    idTaxaAcertos.innerHTML = `${resposta[0].Acertos}%`
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-
-
-
-        //Kpi Total Participantes
-        fetch(`/quiz/totalParticipantes`, { cache: 'no-store' }).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-
-                    if (!resposta || resposta.length === 0) {
-                        console.warn("Nenhum dado Recebido")
-                        return;
-                    }
-                    resposta.reverse()    //mais recente pro mais antigo 
-                    totalParticipantes(resposta)
-                });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-
-    }
-
-
-
-    //Referencia a tabela Desempenho A
-    function questoes(idUsuarios, idQuiz, acertou) {
-
-        if (!idTentativaAtual || isNaN(idTentativaAtual)) {
-            idTentativaAtual = Date.now()
-
-        }
-
-        fetch(`/quiz/questoes`, {
-            method: 'POST', headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                idUsuarios: idUsuarios,
-                fkQuiz: idQuiz,
-                respostaCerta: acertou ? 1 : 0,
-                idTentativa: idTentativaAtual
-            })
-        })
-            .then(function (response) {
+        //Acertos por usuario % KPI 
+        fetch(`/quiz/contarAcertosPorUsuario/${idUsuarios}`, { cache: 'no-store' })  // Requisição que devolve acertos do usuario logado
+            .then(function (response) {    
                 if (response.ok) {
-                    response.json().then(function (resposta) {
-                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    response.json().then(function (resposta) {     // Converte pra json
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)} acertossss`);
 
                         if (!resposta || resposta.length === 0) {
                             console.warn("Nenhum dado Recebido")
                             return;
                         }
+                        resposta.reverse()    //mais novo pro mais antigo 
+                        //atualiza direto 
+                     idTaxaAcertos.innerHTML = `${resposta[0].Acertos}%` // em vez de eu fazer um gráfico eu só preciso de um valor (o mais novo que é sempre o primeiro [0])e consigo jogar direto no html
                     });
                 } else {
                     console.error('Nenhum dado encontrado ou erro na API');
@@ -283,44 +223,55 @@
             .catch(function (error) {
                 console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
             });
+
+
+
+        //Kpi Total Participantes
+        fetch(`/quiz/totalParticipantes`, { cache: 'no-store' })
+            .then(function (response) { 
+                if (response.ok) {
+                    response.json().then(function (resposta) { // Converte pra json
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                        if (!resposta || resposta.length === 0) {
+                            console.warn("Nenhum dado Recebido")
+                            return;
+                        }
+                        resposta.reverse()    //mais recente pro mais antigo 
+                        totalParticipantes(resposta) // chamo a função
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+
     }
 
 
 
+    // Funções de Kpis e Gráficos
 
-
-
-
-    //mudar dps pq não é erradas e sim certas
     function certas(resposta) {
 
         //Destroi Grafico
         if (chartAcertosTopico) {
             chartAcertosTopico.destroy()
         }
-
         if (!resposta || resposta.length === 0) {
             return
         }
-        const labels = resposta.map(item => item.Nome)
-        const valores = resposta.map(item => item.Quantidade)
 
+        // Cria vetores especifico
+        const labels = resposta.map(item => item.Nome)          
+        const valores = resposta.map(item => item.Quantidade) 
 
-        /* // Processando os dados
-         for (let i = 0; i < resposta.length; i++) {
-             labels.push(resposta[i].nome);
-             valores.push(resposta[i].quantidade);
-         }*/
-
-        // Tornar a div visível (apenas uma vez)
-        /*  document.getElementById('divAcertosTopico').classList.remove('display-none');
-          document.getElementById('divAcertosTopico').classList.add('display-block');*/
-
+        
         const divGrafico = document.getElementById('divAcertosTopico')
-
-
         setTimeout(() => {
-            divGrafico.innerHTML = '<canvas id="acertos_topico"></canvas>'   // Recria se necessario    
+            divGrafico.innerHTML = '<canvas id="acertos_topico"></canvas>' 
 
             const ctx = document.getElementById('acertos_topico').getContext('2d')
 
@@ -345,7 +296,7 @@
                             labels: {
                                 color: '#ffff'
                             }
-                            
+
                         }
                     },
                     scales: {
@@ -353,7 +304,7 @@
                             beginAtZero: true,
                             ticks: {
                                 color: "#e0e0e0",
-                                grid: {color: "#333"},
+                                grid: { color: "#333" },
                                 stepSize: 1,
                                 precision: 0
                             }
@@ -361,7 +312,7 @@
                         y: {
                             ticks: {
                                 color: "#e0e0e0",
-                                grid: {color: "#333"},
+                                grid: { color: "#333" },
                                 autoSkip: false
                             }
                         }
@@ -383,15 +334,19 @@
         if (!resposta || resposta.length === 0) {
             return
         }
-        const labels = resposta.map(item => item.GeneroPreferido)
+
+        const labels = []
+        const valores = []
+        let total = 0     // vai armazenar o total dos valores 
+
+        
+        for(var i = 0; i < resposta.length; i++){
+            labels.push(resposta[i].GeneroPreferido)
+        }
 
 
-
-        //const valores = resposta.map(item => item.Quantidade)
-        const valores = [] // vetor que armazena porcentagens 
-        let total = 0   // vai armazenar o total dos valores 
-
-        for (var i = 0; i < resposta.length; i++) { // verifica todas as posições de respostas, cada posição ele soma o numero dela e no fim o total tem o total :) kkkk
+        // verifica todas as posições do vetor resposta, cada posição ele soma o numero dela e no fim o total tem o total :) kkkk
+        for (var i = 0; i < resposta.length; i++) {
             total += resposta[i].Quantidade // total vai ser tudo oq tiver nas posições somadas
         }
 
@@ -399,8 +354,6 @@
         for (var j = 0; j < resposta.length; j++) {
             valores.push(Number((resposta[j].Quantidade / total * 100).toFixed(1)))  // o push adiciona no vetor a quantidade
         }
-
-
 
         const divGrafico = document.getElementById('divPreferenciasMusicais')
 
@@ -425,10 +378,10 @@
                     responsive: true,
                     plugins: {
                         legend: {
-                            labels:{
+                            labels: {
                                 color: '#ffff'
                             }
-                            
+
                         },
                         tooltip: {
                             callbacks: { // unica coisa que funcionou 
@@ -456,8 +409,14 @@
         if (!resposta || resposta.length === 0) {
             return
         }
-        const labels = resposta.map(item => item.usuario || item.nome || 'Usuario ${item.id}')
-        const valores = resposta.map(item => item.quantidadeAcertos || item.acertos || 0)
+
+        const labels = []
+        const valores = []
+
+        for(var i = 0; i < resposta.length; i++){
+            labels.push(resposta[i].nome)
+            valores.push(resposta[i].Acertos)
+        }
 
         const divGrafico = document.getElementById('divAcertosPorUsuario')
 
@@ -493,7 +452,7 @@
                             beginAtZero: true,
                             ticks: {
                                 color: "#e0e0e0",
-                                grid: {color: "#333"},
+                                grid: { color: "#333" },
                                 stepSize: 1,
                                 precision: 0
                             }
@@ -501,7 +460,7 @@
                         y: {
                             ticks: {
                                 color: "#e0e0e0",
-                                grid: {color: "#333"},
+                                grid: { color: "#333" },
                                 autoSkip: false
                             }
                         }
@@ -512,8 +471,8 @@
 
     }
 
-    function progressoAprendizado(resposta){
-        
+    function progressoAprendizado(resposta) {
+
         //Destroi Grafico
         if (chartProgressoAprendizado) {
             chartProgressoAprendizado.destroy()
@@ -522,9 +481,13 @@
         if (!resposta || resposta.length === 0) {
             return
         }
-        const labels = resposta.map((item, idx ) => `Tentativa ${idx + 1}`)
-        const valores = resposta.map(item => item.TaxaAcerto)
+        const labels = []
+        const valores = []
 
+        for(var i = 0; i < resposta.length; i++){
+            labels.push(`Tentativa ${i + 1}`)
+            valores.push(resposta[i].TaxaAcerto)
+        }
         const divGrafico = document.getElementById('divProgressoAprendizado')
 
         setTimeout(() => {
@@ -549,20 +512,20 @@
                 },
                 options: {
                     responsive: true,
-                     plugins: {
+                    plugins: {
                         legend: {
                             labels: {
                                 color: '#ffff'
                             }
-                            
+
                         }
                     },
                     scales: {
-                         x: {
+                        x: {
                             beginAtZero: true,
                             ticks: {
                                 color: "#e0e0e0",
-                                grid: {color: "#333"},
+                                grid: { color: "#333" },
                                 stepSize: 1,
                                 precision: 0
                             }
@@ -570,14 +533,15 @@
                         y: {
                             min: 0,
                             max: 100,
-                            ticks: {color: "#e0e0e0",
-                                grid: {color: "#333"},
-                            beginAtZero: true
-                            }
+                            ticks: {
+                                color: "#e0e0e0",
+                                grid: { color: "#333" },
+                                beginAtZero: true
                             }
                         }
                     }
-                
+                }
+
             })
         }, 10)
 
@@ -589,8 +553,7 @@
             return
         }
 
-
-        const total = resposta[0].total || resposta[0]["Total Usuarios"]
+        const total = resposta[0].TotalUsuarios
         document.querySelector(' .total_participantes').textContent = total
     }
 
@@ -605,22 +568,18 @@
     }
 
 
-    // Graficos de Acertos Por Tópicos
+    // Função para exibir graficos Acertos por Tópico
     function exibirAcertosPorTopico(event, dados) {
         setActiveButton(event.target)
         divPreferenciasMusicais.style.display = "none";
 
         document.getElementById('divAcertosTopico').classList.remove('display-none')
         document.getElementById('divAcertosTopico').classList.add('display-block')
-
-        document.getElementById('divPreferenciasMusicais').classList.remove('display-block')
         document.getElementById('divPreferenciasMusicais').classList.add('display-none')
-
-        document.getElementById('divProgressoAprendizado').classList.remove('display-block')
         document.getElementById('divProgressoAprendizado').classList.add('display-none')
     }
 
-    // Função Grafico Preferencias Musicais
+    // Função Grafico Exibir Preferencias Musicais
     function exibirPreferenciasMusicais(event) {
         setActiveButton(event.target)
         divPreferenciasMusicais.style.display = "flex";
@@ -632,22 +591,19 @@
 
     }
 
-
-    function exibirProgressoAprendizado(event, dados) {
+    // Função Exibir Progresso Aprendizado
+    function exibirProgressoAprendizado(event) {
         setActiveButton(event.target)
         divPreferenciasMusicais.style.display = "none";
-
 
         document.getElementById('divAcertosTopico').classList.add('display-none')
         document.getElementById('divPreferenciasMusicais').classList.add('display-none')
         document.getElementById('divProgressoAprendizado').classList.remove('display-none')
         document.getElementById('divProgressoAprendizado').classList.add('display-block')
 
-
     }
 
 
 </script>
 </script>
-
 </html>

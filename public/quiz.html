@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="./css/quiz.css">
     <link rel="stylesheet" href="./css/navbar.css">
 </head>
+
 <body>
-          <nav class="navbar">
+    <nav class="navbar">
         <div class="logo">Beneath The Notes</div>
         <ul class="nav-links">
             <li> <a href="index.html">Home</a> </li>
@@ -35,16 +36,16 @@
             <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
                 <span class="width-fit-content">Quantidade de acertos: <span id="spanCertas"></span></span>
                 <span class="width-fit-content">Quantidade de erros: <span id="spanErradas"></span></span> <br>
-                    <span>Questão atual: <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
+                <span>Questão atual: <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
                     questões.</span>
             </div>
         </div>
 
         <div id="jogo" style="display: none;" class="width-fit-content flex-colunar border-secondary">
 
-            
-            
-            
+
+
+
 
             <div id="perguntaDaQuestaoAtual" class="padding-8">
                 <span id="spanQuestaoExibida" class="text-bold"></span>
@@ -57,22 +58,26 @@
             <div id="opcoes" class="flex-opcoes padding-8">
 
                 <label class="botaoOpcao" for="primeiraOpcao">
-                    <input id="primeiraOpcao" type="radio"  name="option" value="alternativaA" onclick="respostaSelecionada()"/>
+                    <input id="primeiraOpcao" type="radio" name="option" value="alternativaA"
+                        onclick="respostaSelecionada()" />
                     <span id="labelOpcaoUm" class="option"></span>
                 </label>
 
                 <label class="botaoOpcao" for="segundaOpcao">
-                    <input id="segundaOpcao" type="radio"  name="option" value="alternativaB" onclick="respostaSelecionada()"/>
+                    <input id="segundaOpcao" type="radio" name="option" value="alternativaB"
+                        onclick="respostaSelecionada()" />
                     <span id="labelOpcaoDois" class="option"></span>
                 </label>
 
                 <label class="botaoOpcao" for="terceiraOpcao">
-                    <input id="terceiraOpcao" type="radio" name="option" value="alternativaC" onclick="respostaSelecionada()" />
+                    <input id="terceiraOpcao" type="radio" name="option" value="alternativaC"
+                        onclick="respostaSelecionada()" />
                     <span id="labelOpcaoTres" class="option"></span>
                 </label>
 
                 <label class="botaoOpcao" for="quartaOpcao">
-                    <input id="quartaOpcao" type="radio" name="option" value="alternativaD" onclick="respostaSelecionada()" />
+                    <input id="quartaOpcao" type="radio" name="option" value="alternativaD"
+                        onclick="respostaSelecionada()" />
                     <span id="labelOpcaoQuatro" class="option"></span>
                 </label>
 
@@ -88,21 +93,17 @@
 
     <div id="erro"></div>
 
-     <footer class="footer">
+    <footer class="footer">
         <p>Beneath The Notes - Enzo Servilha - 1CCOB - Todos os direitos reservados. </p>
     </footer>
 
 </body>
 <script>
 
-    if(!sessionStorage.ID_USUARIO){
-        alert("Você precisa estar logado para acessar o quiz")
-        window.location.href = "login.html"
-    }
-    
+
     const listaDeQuestoes = [
 
-     {
+        {
             pergunta: "O que é uma composição musical?",
             alternativaA: "Dança Coreografada",
             alternativaB: "Texto Literário ",
@@ -118,7 +119,7 @@
             alternativaD: "Timbre",
             alternativaCorreta: "alternativaC"
         },
-         {
+        {
             pergunta: "Qual foi o primeiro instrumento musical inventado ?",
             alternativaA: "Tambor",
             alternativaB: "Lira",
@@ -145,7 +146,7 @@
             alternativaCorreta: "alternativaD"
         },
 
-         {
+        {
             pergunta: "O que é progressão harmônica?",
             alternativaA: "Uma sequência de acordes que dá suporte a melodia",
             alternativaB: "Tipo de ritmo musical",
@@ -172,57 +173,54 @@
 
     ]
 
-        var btnProx;
-        var btnTentarNovamente;
-        
+    var btnProx = null
+    var btnTentarNovamente = null
 
-        var primeiraOpcao;
-        var segundaOpcao;
-        var terceiraOpcao;
-        var quartaOpcao;
 
-        var numeroDaQuestaoAtual = 0
-        var quantidadeDeQuestoes = listaDeQuestoes.length
-        var certas = 0 
-        var erradas = 0 
+    var primeiraOpcao = null
+    var segundaOpcao = null
+    var terceiraOpcao = null
+    var quartaOpcao = null
+
+    var numeroDaQuestaoAtual = 0
+    var quantidadeDeQuestoes = listaDeQuestoes.length
+    var certas = 0
+    var erradas = 0
 
 
     window.onload = () => {
 
-         btnProx = document.getElementById("btnProx");
-         btnTentarNovamente = document.getElementById("btnTentarNovamente");
-         
+        btnProx = document.getElementById("btnProx");
+        btnTentarNovamente = document.getElementById("btnTentarNovamente");
+        primeiraOpcao = document.getElementById("primeiraOpcao");
+        segundaOpcao = document.getElementById("segundaOpcao");
+        terceiraOpcao = document.getElementById("terceiraOpcao");
+        quartaOpcao = document.getElementById("quartaOpcao");
 
 
-            primeiraOpcao = document.getElementById("primeiraOpcao");
-             segundaOpcao = document.getElementById("segundaOpcao");
-            terceiraOpcao = document.getElementById("terceiraOpcao");
-             quartaOpcao = document.getElementById("quartaOpcao");
-
-       
         inicializar()
     }
-        
-   function inicializar(){
-    document.getElementById("qtdQuestoes").innerText = quantidadeDeQuestoes
-    
 
-    //Inativação Botões
-    btnProx.disabled = true;
-    btnTentarNovamente.disabled = true
-
-    //Reinicia Variaveis Globais se quiser
-    numeroDaQuestaoAtual = 0
-    certas = 0
+    function inicializar() {
+        document.getElementById("qtdQuestoes").innerText = quantidadeDeQuestoes
 
 
-    //Limpa o input na hora do clique e a cor 
-    desmarcarRadioButtons()
-    limparCoresBackgroundOpcoes()
-   }
+        //Inativação Botões
+        btnProx.disabled = true;
+        btnTentarNovamente.disabled = true
+
+        //Reinicia Variaveis
+        numeroDaQuestaoAtual = 0
+        certas = 0
 
 
-   let idTentativaAtual = Date.now()
+        //Limpa o input na hora do clique e a cor 
+        desmarcarRadioButtons()
+        limparCoresBackgroundOpcoes()
+    }
+
+
+    let idTentativaAtual = Date.now()
 
     function iniciarQuiz() {
         document.getElementById('pontuacao').style.display = "flex"
@@ -230,20 +228,17 @@
         document.getElementById('btnIniciarQuiz').style.display = "none"
 
         preencherHTMLcomQuestaoAtual(0)
-
         idTentativaAtual = Date.now()
-        
         btnProx.disabled = true
         btnTentarNovamente.disabled = true
 
-        
     }
 
     function preencherHTMLcomQuestaoAtual(index) {
         habilitarAlternativas(true)
         const questaoAtual = listaDeQuestoes[index]
         numeroDaQuestaoAtual = index
-       
+
 
         document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = Number(index) + 1 // ajustando porque o index começa em 0
         document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.pergunta;
@@ -254,16 +249,22 @@
     }
 
     function respostaSelecionada() {
-        if(!btnProx.disabled){  
+        if (!btnProx.disabled) {
             return
         }
 
         btnProx.disabled = false
-
+        btnTentarNovamente.disabled = false
     }
 
     function habilitarAlternativas(trueOrFalse) {
-        let opcaoEscolhida = trueOrFalse ? false : true
+        let opcaoEscolhida = null
+
+        if (trueOrFalse) {
+            opcaoEscolhida = false
+        } else {
+            opcaoEscolhida = true
+        }
 
         primeiraOpcao.disabled = opcaoEscolhida
         segundaOpcao.disabled = opcaoEscolhida
@@ -273,99 +274,88 @@
     }
 
     function avancar() {
-        if(btnProx.disabled){
+        if (btnProx.disabled) { // se estiver destivado 
             alert("Você precisa selecionar uma resposta antes de clicar em avançar")
             return
         }
-        checarResposta()
+        checarResposta() // verifica certo ou errado e manda os contadores de certo ou errado pro back-end
 
         setTimeout(() => {
-            btnProx.disabled = true
-            desmarcarRadioButtons()
-            limparCoresBackgroundOpcoes()
+            btnProx.disabled = true // desativa até escolher uma outra resposta
+            desmarcarRadioButtons()     // desmarca as opções
+            limparCoresBackgroundOpcoes()   // limpa as cores das classes
 
-            if(numeroDaQuestaoAtual < quantidadeDeQuestoes - 1){
+            if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {    //validação pra ver se tem mais perguntas
                 numeroDaQuestaoAtual++
-                preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
-            } else{
+                preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual) // exibe proxima perguunta
+            } else {
                 finalizarJogo()
             }
         }, 1000)
     }
 
-        
-
-       
-
-
-    
 
     function tentarNovamente() {
         window.location.reload()
     }
 
     function checarResposta() {
-        const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual] 
-        const respostaQuestaoAtual = questaoAtual.alternativaCorreta 
-        const options = document.getElementsByName("option"); 
+        const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual]
+        const respostaQuestaoAtual = questaoAtual.alternativaCorreta
+        const options = document.getElementsByName("option");
 
-        let alternativaCorreta = null 
-
-        
+        let alternativaCorreta = null
 
 
-        options.forEach((option) => {
+        options.forEach((option) => { // for each percorre todas as opções
             if (option.value === respostaQuestaoAtual) {
                 alternativaCorreta = option.nextElementSibling  //pega o span irmao do input
             }
         })
 
         options.forEach((option) => {
-            const label = option.nextElementSibling  
+            const label = option.nextElementSibling  // usa pra colocar no span a cor de certo ou errado
 
-            if (option.checked  && option.value === respostaQuestaoAtual) {
-                label.classList.add("text-success-with-bg")
+            if (option.checked && option.value === respostaQuestaoAtual) {
+                label.classList.add("text-success-with-bg")  // cor verde pra resposta certa
 
                 certas++                //adiciona mais um no total certas
 
                 const resposta = 1
 
                 fetch("/quiz/questoes", {
-                      method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                idUsuarios: Number(sessionStorage.ID_USUARIO),
-                                fkQuiz: numeroDaQuestaoAtual + 1,
-                                respostaCerta: resposta,
-                                idTentativa: idTentativaAtual
-                            })
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        idUsuarios: Number(sessionStorage.ID_USUARIO),
+                        fkQuiz: numeroDaQuestaoAtual + 1,
+                        respostaCerta: resposta,
+                        idTentativa: idTentativaAtual
+                    })
 
-                        })
-                            .then(res => {
-                                if (res.ok) {
-                                    console.log("Cadastro realizado com sucesso!");
+                })
+                    .then(res => { // objeto resposta
+                        if (res.ok) { // verifica resposta
+                            console.log("Cadastro realizado com sucesso!");
 
-                                } else {
-                                    return res.text().then(texto => {
-                                        
-                                        document.getElementById("erro").innerHTML = `Deu erro` 
+                        } else {
+                            return res.text().then(texto => {
 
-                                    });
-                                }
-                            })
-                            .catch(erro => {
-                                console.error("Erro no cadastro:", erro);
-                              
-                                mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
-                                setTimeout(sumirMensagem, 5000);
+                                document.getElementById("erro").innerHTML = `Deu erro`
+
                             });
+                        }
+                    })
+                    .catch(erro => {
+                        console.error("Erro no cadastro:", erro);
+
+                        mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
+                        setTimeout(sumirMensagem, 5000);
+                    });
 
 
-
-
-                
             } else if (option.checked && option.value !== respostaQuestaoAtual) {
                 label.classList.add("text-error-with-bg")
                 alternativaCorreta.classList.add("text-success-with-bg")
@@ -373,48 +363,100 @@
                 erradas++                   // adiciona mais um no total erradas
 
                 const resposta = 0
-                
-                
+
                 fetch("/quiz/questoes", {
-                      method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                idUsuarios: sessionStorage.ID_USUARIO,
-                                fkQuiz: numeroDaQuestaoAtual + 1,
-                                respostaCerta: resposta,
-                                idTentativa: idTentativaAtual
-                            })
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        idUsuarios: sessionStorage.ID_USUARIO,
+                        fkQuiz: numeroDaQuestaoAtual + 1,
+                        respostaCerta: resposta,
+                        idTentativa: idTentativaAtual
+                    })
 
-                        })
-                            .then(res => {
-                                if (res.ok) {
-                                    console.log("Cadastro realizado com sucesso!");
+                })
+                    .then(res => {
+                        if (res.ok) {
+                            console.log("Cadastro realizado com sucesso!");
 
-                                } else {
-                                    return res.text().then(texto => {
-                                        
-                                        mensagem_erro.innerHTML = texto;
-                                        setTimeout(sumirMensagem, 5000);
-                                    });
-                                }
-                            })
-                            .catch(erro => {
-                                console.error("Erro no cadastro:", erro);
-                                
-                                mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
+                        } else {
+                            return res.text().then(texto => {
+
+                                mensagem_erro.innerHTML = texto;
                                 setTimeout(sumirMensagem, 5000);
                             });
+                        }
+                    })
+                    .catch(erro => {
+                        console.error("Erro no cadastro:", erro);
+
+                        mensagem_erro.innerHTML = "Erro ao conectar com o servidor.";
+                        setTimeout(sumirMensagem, 5000);
+                    });
             }
         })
 
-        document.getElementById('spanCertas').innerText = certas
-        document.getElementById('spanErradas').innerText = erradas
+        document.getElementById('spanCertas').innerText = certas    // mostra pro usuario quantas respostas CERTAS ele teve 
+        document.getElementById('spanErradas').innerText = erradas  // // mostra pro usuario quantas respostas ERRADAS ele teve
+
+    }
+
+
+    //Referencia a tabela Desempenho 
+    function questoes(idUsuarios, idQuiz, acertou) {
+
+        if (!idTentativaAtual || isNaN(idTentativaAtual)) {
+            idTentativaAtual = Date.now()
+
+        }
+
+        let respostaCerta = null
+
+        if (acertou) {
+            respostaCerta = 1
+        } else {
+            respostaCerta = 0
+        }
+
+        fetch(`/quiz/questoes`, {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ // conversão pra json
+                idUsuarios: idUsuarios,
+                fkQuiz: idQuiz,
+                respostaCerta: respostaCerta,
+                idTentativa: idTentativaAtual
+            })
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (resposta) {
+                        console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                        if (!resposta || resposta.length === 0) {
+                            console.warn("Nenhum dado Recebido")
+                            return;
+                        }
+                    });
+                } else {
+                    console.error('Nenhum dado encontrado ou erro na API');
+                }
+            })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
     }
 
 
 
+
+
+
+
+    // Só limpa as cores percorrendo as labels e retirando quaisquer classes css
     function limparCoresBackgroundOpcoes() {
         const labels = [
             document.getElementById("labelOpcaoUm"),
@@ -423,10 +465,10 @@
             document.getElementById("labelOpcaoQuatro")
 
         ]
-        
-            labels.forEach((label) => {
-                label.classList.remove("text-success-with-bg", "text-error-with-bg")
-            } 
+
+        labels.forEach((label) => {
+            label.classList.remove("text-success-with-bg", "text-error-with-bg")
+        }
         )
     }
 
@@ -437,19 +479,20 @@
         }
     }
 
+
     function finalizarJogo() {
         alert("Você finalizou o quiz")
-        
+
         //Desativa botões dps de terminar
         btnProx.disabled = true
-        btnTentarNovamente.disabled = false
 
-        //Esconder se quiser
+        
         document.getElementById('jogo').style.display = "none"
 
-        window.location =   "dashboard.html";
+        window.location = "dashboard.html";
     }
 
 
 </script>
+
 </html>

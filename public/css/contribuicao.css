@@ -79,17 +79,21 @@ h1 {
 
 .audio video,
 .audio .audio {
-    width: 700px;
+    width: 400px;
     max-width: 90vw;
     display: block;
 
+}
+
+.p{
+    font-size: 1.17rem;
 }
 
 .texto-final {
     margin-top: 60px;
     text-align: center;
 
-    font-size: 1.1rem;
+    font-size: 1.17rem;
     color: #ccc;
 }
 
@@ -139,13 +143,11 @@ h1 {
     color: #00bcd4;
     font-weight: bold;
 }
-.p{
-    font-size: 1.08em;
-}
 
 .intro-contribuicao h1,
 .intro-contribuicao h2 {
     text-align: center;
+    font-size: 1.17rem;
 }
 
 .intro-contribuicao h1 {
@@ -162,7 +164,7 @@ h1 {
 }
 
 .intro-contribuicao p {
-    font-size: 1em;
+    font-size: 1.17rem;
     color: white;
     margin-bottom: 16px;
     font-weight: 400px;

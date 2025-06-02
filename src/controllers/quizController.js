@@ -45,23 +45,6 @@ var quizModel = require("../models/quizModel");
             res.status(500).json(erro.sqlMessage);
         });
     }
-    
-
-    function erradas(req, res){
-        quizModel.erradas()
-
-        .then(function (resultado) {
-            if (resultado.length > 0) {
-                res.status(200).json(resultado);
-            } else {
-                res.status(204).send("Nenhum resultado encontrado!");
-            }
-        }).catch(function (erro) {
-            console.log("ERRO ao buscar pontuação: ", erro.sqlMessage);
-            res.status(500).json(erro.sqlMessage);
-        });
-    }
-
 
     function preferenciasMusicais(req, res){
         quizModel.preferenciasMusicais()
@@ -137,7 +120,6 @@ var quizModel = require("../models/quizModel");
 module.exports = {
     questoes,
     certas,
-    erradas,
     preferenciasMusicais,
     contarAcertosPorUsuario,
     totalParticipantes,
